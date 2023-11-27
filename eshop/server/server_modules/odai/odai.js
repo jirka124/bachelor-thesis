@@ -32,7 +32,7 @@ class Odai {
 
   static config = {
     defaultDatabase: "bachelor_eshop",
-    appName: "bachelor_eshop",
+    appName: "levitate",
   };
 
   static async loadClass() {
@@ -49,7 +49,7 @@ class Odai {
       shared.Connect2.connWrap
     );
     m = await utilDef.noReturnQuery(
-      `USE ${this.composeIdPrefix()}_reserved_dtb`,
+      `USE reinv_reserved_dtb`,
       shared.Connect2.connWrap
     );
   }
