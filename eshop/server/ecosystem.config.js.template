@@ -1,0 +1,48 @@
+module.exports = {
+  apps: [
+    {
+      name: "PlantLevitateServerApi",
+      script: "./index.js",
+      watch: ["./"],
+      watch_delay: 1000,
+      ignore_watch: ["node_modules", "uploads"],
+      wait_ready: true,
+      shutdown_with_message: true,
+      watch_options: {
+        followSymlinks: false,
+      },
+      env_development: {
+        NODE_ENV: "development",
+        VUE_APP_START_SERVER: 1,
+        VUE_APP_DEMO: 1,
+        VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
+        VUE_APP_AUTH_SESS_KEY: "plant_session_key",
+        VUE_APP_AUTH_SESS_SECRET: "secret", // TODO: replace with session secret
+        VUE_APP_DOMAIN_FRONT: "localhost", // TODO: replace with domain front-end app runs on
+        VUE_APP_DOMAIN_BACK: "localhost", // TODO: replace with domain back-end app runs on
+        VUE_APP_MYSQL_PORT: 3306, // TODO: replace with port mysql server is listening on
+        VUE_APP_MYSQL_USER: "root", // TODO: replace with mysql user
+        VUE_APP_MYSQL_PASS: "pass123", // TODO: replace with password of mysql user
+        VUE_APP_MYSQL_USER_REINV: "on_demand", // TODO: replace with mysql user having all GLOBAL privileges
+        VUE_APP_MYSQL_PASS_REINV: "pass123", // TODO: replace with password of mysql user
+        VUE_APP_SERVER_ROOT: "C:\\path\\to\\eshop\\server", // TODO: replace with root of project's server folder
+      },
+      env_production: {
+        NODE_ENV: "production",
+        VUE_APP_START_SERVER: 1,
+        VUE_APP_DEMO: 0,
+        VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
+        VUE_APP_AUTH_SESS_KEY: "plant_session_key",
+        VUE_APP_AUTH_SESS_SECRET: "",
+        VUE_APP_DOMAIN_FRONT: "",
+        VUE_APP_DOMAIN_BACK: "",
+        VUE_APP_MYSQL_PORT: 0,
+        VUE_APP_MYSQL_USER: "",
+        VUE_APP_MYSQL_PASS: "",
+        VUE_APP_MYSQL_USER_REINV: "",
+        VUE_APP_MYSQL_PASS_REINV: "",
+        VUE_APP_SERVER_ROOT: "",
+      },
+    },
+  ],
+};
