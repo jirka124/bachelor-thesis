@@ -1,9 +1,12 @@
-const Connect = require('./connect')
+const Connect = require("./connect");
+const Connect2 = require("./connect2");
 
-Connect.loadClass()
+Connect.loadClass();
+Connect2.loadClass();
 
 const shared = {
-  Connect
-}
+  Connect,
+  Connect2,
+};
 
-module.exports = shared
+module.exports = shared;

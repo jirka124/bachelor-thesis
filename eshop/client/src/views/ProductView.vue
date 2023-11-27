@@ -44,7 +44,10 @@ export default defineComponent({
       // fetch basic info about product (indexed)
       let r;
       try {
-        r = (await api.post("general/view-product-ssr", { productId })).data;
+        const reqBody = { productId };
+        if (this.isServer || true) reqBody.path = this.$route.fullPath;
+
+        r = (await api.post("general/view-product-ssr", reqBody)).data;
         if (r.reqState !== null) console.log(r.reqState);
 
         if (r.result.hasOwnProperty("product")) this.setOpenProduct(r.result.product);
@@ -109,13 +112,16 @@ export default defineComponent({
 #product {
   padding: 80px 2vw 20px 2vw;
 }
+
 #product-full {
   display: flex;
   width: 100%;
 }
+
 #product-full-l {
   width: 512px;
 }
+
 #product-full-r {
   flex-grow: 2;
 }
