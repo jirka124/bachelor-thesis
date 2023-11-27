@@ -88,7 +88,7 @@ class Odai {
 
       // drop tables if exists
       r = await utilDef.noReturnQuery(
-        `DROP TABLE IF EXISTS ${this.composeIdPrefix()}_${tablePostfix}, reinv_id_${tablePostfix}, reinv_col_${tablePostfix}`,
+        `DROP TABLE IF EXISTS ${this.composeIdPrefix()}_${tablePostfix}, ${this.composeIdPrefix()}_id_${tablePostfix}, ${this.composeIdPrefix()}_col_${tablePostfix}`,
         shared.Connect2.connWrap
       );
       if (!r.state) throw new Error(r.result);
