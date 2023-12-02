@@ -411,7 +411,7 @@ class OdaiTable {
     );
 
     let rowsMatchColumns = [];
-    m = await utilDef.retQuery(
+    let m = await utilDef.retQuery(
       `SELECT t1.reinv_id, t1.col, ${primaryColumns.join(
         ","
       )} FROM ${Odai.composeIdPrefix()}_col_${tablePostfix} AS t1 LEFT JOIN ${Odai.composeIdPrefix()}_id_${tablePostfix} AS t2 ON t1.reinv_id = t2.reinv_id WHERE t1.col IN (${allColumns.join(
