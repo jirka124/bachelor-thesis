@@ -3,6 +3,109 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "TableComp",
+  props: {
+    config: {
+      type: Object,
+      default() {
+        return {
+          allowNew: null,
+          control: null,
+          data: null
+        }
+      }
+    }
+  },
+  data() {
+    return {
+      page: 0,
+      srchVal: "",
+      sortByField: "id"
+    }
+  },
+  computed: {
+    usedConfig() {
+      const conf = {
+        allowNew: this.config.allowNew || false,
+        pagination: this.config.pagination || 10,
+        control: this.config.control || [
+          {
+            name: "id",
+            displayName: "ID"
+          },
+          {
+            name: "def",
+            displayName: "Default Column"
+          },
+          {
+            name: "act1",
+            type: "button",
+            displayName: ""
+          }
+        ],
+        data: this.config.data || [
+          {
+            id: 1,
+            def: "GG",
+            act1: {
+              ico: "fa-solid fa-pen",
+              event: "def-act",
+              eventParams: {}
+            }
+          },
+          {
+            id: 2,
+            def: "GG",
+            act1: null
+          }
+        ]
+      }
+
+      return conf;
+    },
+    filteredData() {
+      let filtered = this.usedConfig.data.filter(data => String(data.id).startsWith(this.srchVal));
+
+      return filtered.toSorted((a, b) => {
+        const aa = a[this.sortByField];
+        const bb = b[this.sortByField];
+
+        if (aa < bb) return -1;
+        else if (bb > aa) return 1;
+        return 0;
+      })
+    },
+    onPageData() {
+      const startInd = this.page * this.usedConfig.pagination;
+      const endInd = startInd + this.usedConfig.pagination;
+      const onPageArr = this.filteredData.slice(startInd, endInd);
+
+      return onPageArr;
+    },
+    sortColumnName() {
+      return this.usedConfig.control.find(ctrl => ctrl.name === this.sortByField).displayName || "NONE";
+    },
+    controlFields() {
+      return this.usedConfig.control.reduce((arr, ctrl) => {
+        arr.push(ctrl.name);
+        return arr;
+      }, [])
+    },
+    sortableControlFields() {
+      return this.usedConfig.control.filter(ctrl => ctrl.type !== "button");
+    },
+    minPage() {
+      return 0;
+    },
+    maxPage() {
+      return Math.ceil(this.usedConfig.data.length / this.usedConfig.pagination) - 1;
+    }
+  },
+  methods: {
+    movePage(p) {
+      if (p === "prev") this.page = Math.max(0, --this.page);
+      else if (p === "next") this.page = Math.min(this.maxPage, ++this.page);
+    }
+  }
 });
 </script>
 
@@ -11,64 +114,44 @@ export default defineComponent({
     <div class="table-head">
       <div class="table-head-srch iconed-in">
         <i class="fa-solid fa-magnifying-glass in-ico"></i>
-        <input class="in" type="text" placeholder="">
+        <input v-model="srchVal" class="in" type="text" placeholder="">
       </div>
       <div class="table-head-sort">
         <p>Sort by</p>
         <div class="table-head-sort-by">
-          <p>created</p>
-          <i class="fa-solid fa-angle-down"></i>
+          <select v-model="sortByField">
+            <option v-for="col in sortableControlFields" :key="col.name" :value="col.name">{{ col.displayName }}</option>
+          </select>
         </div>
       </div>
-      <button class="table-head-new">
+      <button v-show="usedConfig.allowNew" @click="$emit('create-new')" class="table-head-new">
         <i class="fa-solid fa-plus"></i>
       </button>
     </div>
     <div class="table-list scroll">
       <table class="table-list-tbl">
         <tr class="table-list-tbl-row">
-          <th>ID</th>
-          <th>Subject</th>
-          <th>Day</th>
-          <th>Time - by</th>
-          <th>Time - till</th>
-          <th>Recurrence</th>
-          <th>Continuance - by</th>
-          <th>Continuance - till</th>
-          <th></th>
+          <th v-for="head in usedConfig.control" :key="head.name">{{ head.displayName }}</th>
         </tr>
-        <tr class="table-list-tbl-row">
-          <td>1</td>
-          <td>OSW1</td>
-          <td>Monday</td>
-          <td>14:30</td>
-          <td>15:45</td>
-          <td>Every week</td>
-          <td>20.9.2001</td>
-          <td>15.6.2002</td>
-          <td><button><i class="fa-solid fa-eye"></i></button></td>
-        </tr>
-        <tr class="table-list-tbl-row" v-for="i in new Array(10)" :key="i">
-          <td>1</td>
-          <td>OSW1</td>
-          <td>Monday</td>
-          <td>14:30</td>
-          <td>15:45</td>
-          <td>Every week</td>
-          <td>20.9.2001</td>
-          <td>15.6.2002</td>
-          <td><button><i class="fa-solid fa-eye"></i></button></td>
+        <tr class="table-list-tbl-row" v-for="d in onPageData" :key="d.id">
+          <td v-for="field in controlFields" :key="String(d.id) + field">
+            <template v-if="d[field] === null"></template>
+            <template v-else-if="typeof d[field] === 'object'">
+              <button @click="$emit(d[field].event, d[field].eventParams)"><i :class="d[field].ico"></i></button>
+            </template>
+            <template v-else>{{ d[field] }}</template>
+          </td>
         </tr>
       </table>
     </div>
     <div class="table-pagi">
-      <i class="fa-solid fa-angle-left"></i>
+      <i @click="movePage('prev')" class="fa-solid fa-angle-left"></i>
       <div class="table-pagi-opt">
-        <button>1</button>
-        <button class="active">2</button>
-        <button>3</button>
+        <button>{{ page > minPage ? page - 1 + 1 : '' }}</button>
+        <button class="active">{{ page + 1 }}</button>
+        <button>{{ page < maxPage ? page + 1 + 1 : '' }}</button>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
+      <i @click="movePage('next')" class="fa-solid fa-angle-right"></i>
     </div>
   </div>
 </template>
@@ -115,6 +198,16 @@ export default defineComponent({
   cursor: pointer;
 }
 
+.table-head-sort-by>select {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.table-head-sort-by:focus-within {
+  outline: 2px solid #333;
+}
+
 .table-head-sort-by>p {}
 
 .table-head-sort-by>i {}
@@ -157,7 +250,7 @@ export default defineComponent({
 
 .table-list-tbl-row>td {}
 
-.table-list-tbl-row>td>button {
+.table-list-tbl-row>td>:deep(button) {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +262,7 @@ export default defineComponent({
   cursor: pointer;
 }
 
-.table-list-tbl-row>td>button>i {
+.table-list-tbl-row>td>:deep(button>i) {
   color: white;
 }
 

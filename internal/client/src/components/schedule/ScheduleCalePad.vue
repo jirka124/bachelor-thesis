@@ -3,18 +3,42 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ScheduleCalePad",
+  emits: ["prev", "next"],
+  props: {
+    date: {
+      type: Number,
+      default: null
+    },
+    month: {
+      type: Number,
+      default: null
+    },
+    year: {
+      type: Number,
+      default: null
+    },
+    readonly: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    }
+  }
 });
 </script>
 
 <template>
   <div class="schedule-cale-pad">
-    <i class="fa-solid fa-caret-left"></i>
+    <i v-if="!readonly" @click="$emit('prev')" class="fa-solid fa-caret-left"></i>
     <div class="schedule-cale-pad-date">
-      <div class="schedule-cale-pad-day">22</div>
-      <div class="schedule-cale-pad-month">February</div>
-      <div class="schedule-cale-pad-year">2022</div>
+      <div class="schedule-cale-pad-day">{{ date !== null ? date : "" }}</div>
+      <div class="schedule-cale-pad-month">{{ month !== null ? months[month] : "" }}</div>
+      <div class="schedule-cale-pad-year">{{ year !== null ? year : "" }}</div>
     </div>
-    <i class="fa-solid fa-caret-right"></i>
+    <i v-if="!readonly" @click="$emit('next')" class="fa-solid fa-caret-right"></i>
   </div>
 </template>
 

@@ -5,15 +5,143 @@ import FieldInput from "@/components/FieldInput.vue";
 export default defineComponent({
   name: "CreateClassView",
   components: { FieldInput },
+  data() {
+    return {
+      FIELDS: [
+        {
+          name: "id",
+          displayName: "ID",
+          type: "text",
+          ico: "fa-solid fa-database",
+          isDisabled: true
+        },
+        {
+          name: "subject",
+          displayName: "Subject",
+          type: "text",
+          ico: "fa-solid fa-database",
+        },
+        {
+          name: "day",
+          displayName: "Day",
+          type: "select",
+          ico: "fa-solid fa-database",
+          options: [
+            {
+              name: "monday",
+              displayName: "Monday"
+            },
+            {
+              name: "tuesday",
+              displayName: "Tuesday"
+            },
+            {
+              name: "wednesday",
+              displayName: "Wednesday"
+            },
+            {
+              name: "thursday",
+              displayName: "Thursday"
+            },
+            {
+              name: "friday",
+              displayName: "Friday"
+            },
+            {
+              name: "saturday",
+              displayName: "Saturday"
+            },
+            {
+              name: "sunday",
+              displayName: "Sunday"
+            },
+          ]
+        },
+        {
+          name: "tBy",
+          displayName: "Time - by",
+          type: "time",
+          ico: "fa-solid fa-database",
+        },
+        {
+          name: "tTill",
+          displayName: "Time - till",
+          type: "time",
+          ico: "fa-solid fa-database",
+        },
+        {
+          name: "recurrence",
+          displayName: "Recurrence",
+          type: "select",
+          ico: "fa-solid fa-database",
+          options: [
+            {
+              name: "once",
+              displayName: "Once"
+            },
+            {
+              name: "e1week",
+              displayName: "Every week"
+            },
+            {
+              name: "e2week",
+              displayName: "Every 2 week"
+            },
+            {
+              name: "e3week",
+              displayName: "Every 3 week"
+            },
+          ]
+        },
+        {
+          name: "cBy",
+          displayName: "Continuance - by",
+          type: "date",
+          ico: "fa-solid fa-database",
+        },
+        {
+          name: "cTill",
+          displayName: "Continuance - till",
+          type: "date",
+          ico: "fa-solid fa-database",
+        },
+        {
+          name: "minAtt",
+          displayName: "Min. attendance %",
+          type: "number",
+          ico: "fa-solid fa-database",
+        },
+      ],
+      values: {
+        id: "AUTO",
+        subject: "",
+        day: "monday",
+        tBy: this.splitDateTime(this.localAsUTC())[1].slice(0, 5),
+        tTill: this.splitDateTime(this.localAsUTC())[1].slice(0, 5),
+        recurrence: "once",
+        cBy: this.splitDateTime(this.localAsUTC())[0],
+        cTill: this.splitDateTime(this.localAsUTC())[0],
+        minAtt: 70,
+      }
+    }
+  },
+  methods: {
+    goToChoose() {
+      this.$router.push({ name: "edit-class-choose" });
+    },
+    splitDateTime(dateStr) {
+      return dateStr.slice(0, -1).split("T")
+    }
+  }
 });
 </script>
 
 <template>
   <div id="teacher-create-cls">
-    <FieldInput v-for="i in new Array(9)" :key="i" />
+    <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" :value="values[field.name]" />
     <div id="teacher-create-cls-act">
       <button class="btn-1">Create</button>
-      <button class="btn-3">Cancel</button>
+      <button class="btn-3" @click="goToChoose">Cancel</button>
     </div>
   </div>
 </template>

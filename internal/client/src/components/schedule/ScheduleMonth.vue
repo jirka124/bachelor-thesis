@@ -9,8 +9,61 @@ export default defineComponent({
   components: { ScheduleCalePad, ScheduleCaleChoose, ScheduleDay },
   data() {
     return {
-      choosenDay: null,
+      dateSelected: null,
+      monthSelected: null,
+      yearSelected: null,
     }
+  },
+  computed: {
+    dateObjSelected() {
+      const date = new Date();
+
+      if (this.dateSelected !== null) date.setDate(this.dateSelected);
+      date.setMonth(this.monthSelected);
+      date.setFullYear(this.yearSelected);
+
+      return date;
+    }
+  },
+  methods: {
+    setSelectedDate(date = new Date()) {
+      if (this.dateSelected !== null) this.dateSelected = date.getDate();
+      this.monthSelected = date.getMonth();
+      this.yearSelected = date.getFullYear();
+    },
+    daysOfMonth(forDate = new Date()) {
+      const DAY_MS = 24 * 60 * 60 * 1000;
+      const forMonth = forDate.getMonth();
+      const days = [];
+
+      let dateObj = new Date(new Date(Number(forDate)).setDate(0));
+      do {
+        dateObj = new Date(Number(dateObj) + DAY_MS);
+        if (dateObj.getMonth() === forMonth) days.push(dateObj);
+      } while (dateObj.getMonth() === forMonth);
+
+      return days;
+    },
+    prevDay() {
+      if (this.dateSelected !== null)
+        this.setSelectedDate(new Date(new Date(Number(this.dateObjSelected)).setDate(this.dateSelected - 1)));
+      else this.setSelectedDate(new Date(new Date(Number(this.dateObjSelected)).setMonth(this.monthSelected - 1)));
+    },
+    nextDay() {
+      if (this.dateSelected !== null)
+        this.setSelectedDate(new Date(new Date(Number(this.dateObjSelected)).setDate(this.dateSelected + 1)));
+      else this.setSelectedDate(new Date(new Date(Number(this.dateObjSelected)).setMonth(this.monthSelected + 1)));
+    },
+    chooseDate(date) {
+      this.dateSelected = date;
+    }
+  },
+  created() {
+    this.setSelectedDate();
+  },
+  mounted() {
+    console.log(this.daysOfMonth(this.dateObjSelected));
+    console.log(this.daysOfMonth(new Date(Number(new Date()) - 5 * 24 * 60 * 60 * 1000)))
   }
 });
 </script>
@@ -18,15 +71,15 @@ export default defineComponent({
 <template>
   <div class="schedule-month">
     <div class="schedule-month-mode">
-      <i @click="choosenDay = null" class="fa-regular fa-calendar-days" :class="{ active: !choosenDay }"></i>
-      <i @click="choosenDay = 1" class="fa-solid fa-layer-group" :class="{ active: choosenDay }"></i>
+      <i @click="dateSelected = null" class="fa-regular fa-calendar-days" :class="{ active: !dateSelected }"></i>
+      <i @click="dateSelected = 1" class="fa-solid fa-layer-group" :class="{ active: dateSelected }"></i>
     </div>
-    <ScheduleCalePad />
+    <ScheduleCalePad :date="dateSelected" :month="monthSelected" :year="yearSelected" @prev="prevDay" @next="nextDay" />
     <div class="schedule-month-views">
-      <ScheduleCaleChoose />
-      <div v-show="choosenDay" class="schedule-month-day">
+      <ScheduleCaleChoose :daysOfMonth="daysOfMonth(dateObjSelected)" @choose-date="chooseDate" />
+      <div v-show="dateSelected" class="schedule-month-day">
         <ScheduleDay orientation="V" />
-        <button @click="choosenDay = null" class="btn-2">Back</button>
+        <button @click="dateSelected = null" class="btn-2">Back</button>
       </div>
     </div>
   </div>

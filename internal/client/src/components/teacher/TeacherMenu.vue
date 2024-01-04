@@ -9,17 +9,20 @@ export default defineComponent({
         {
           id: 0,
           ico: "fa-solid fa-pencil",
-          name: "Edit Classes"
+          name: "Edit Classes",
+          action: "edit"
         },
         {
           id: 1,
           ico: "fa-solid fa-clipboard-list",
-          name: "Write Attendance"
+          name: "Write Attendance",
+          action: "write"
         },
         {
           id: 2,
           ico: "fa-solid fa-chart-line",
-          name: "Read Attendance"
+          name: "Read Attendance",
+          action: "read"
         },
       ],
       menuToggleOn: false,
@@ -29,6 +32,11 @@ export default defineComponent({
   methods: {
     handleW512(x) {
       this.isW512 = x.matches
+    },
+    goTo(to) {
+      if (to === "edit") this.$router.push({ name: "edit-class-choose" });
+      else if (to === "write") this.$router.push({ name: "schedule" });
+      else if (to === "read") this.$router.push({ name: "read-attend-choose" });
     }
   },
   mounted() {
@@ -53,7 +61,7 @@ export default defineComponent({
         <hr id="teacher-menu-divide" v-show="menuToggleOn" />
       </div>
       <div id="teacher-menu-mid" class="scroll">
-        <div v-for="item in MENU_ITEMS" :key="item.id" class="teacher-menu-mid-item">
+        <div v-for="item in MENU_ITEMS" :key="item.id" @click="goTo(item.action)" class="teacher-menu-mid-item">
           <i :class="item.ico"></i>
           <p v-show="menuToggleOn">{{ item.name }}</p>
         </div>

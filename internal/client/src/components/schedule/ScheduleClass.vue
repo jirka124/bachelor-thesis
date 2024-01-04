@@ -3,11 +3,16 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ScheduleClass",
+  methods: {
+    goTo() {
+      this.$router.push({ name: "write-attend" })
+    }
+  }
 });
 </script>
 
 <template>
-  <div class="schedule-class">
+  <div class="schedule-class" @click="goTo()">
     <p class="schedule-class-short">OSW2</p>
     <p class="schedule-class-inter">16:00 - 17:30</p>
   </div>

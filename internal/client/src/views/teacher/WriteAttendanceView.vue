@@ -9,12 +9,39 @@ export default defineComponent({
   data() {
     return {
       checked: true,
+      srchVal: "",
+      date: new Date().getDate(),
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
       attendants: []
     }
   },
+  computed: {
+    filteredAttendants() {
+      return this.attendants.filter(att => String(att.id).startsWith(this.srchVal));
+    },
+    checkedInFiltered() {
+      return this.filteredAttendants.filter(att => att.checked);
+    },
+    noneFilteredChecked() {
+      return this.checkedInFiltered.length === 0;
+    },
+    allFilteredChecked() {
+      return this.filteredAttendants.length === this.checkedInFiltered.length
+    }
+  },
+  methods: {
+    goTo() {
+      this.$router.push({ name: "schedule" })
+    },
+    toggleAll() {
+      if (this.noneFilteredChecked) this.filteredAttendants.map(att => att.checked = true)
+      else this.filteredAttendants.map(att => att.checked = false)
+    }
+  },
   mounted() {
-    for (let i = 0; i < 150; i++) {
-      this.attendants.push({ id: i, name: "Anolli Bozyni" })
+    for (let i = 0; i < 12; i++) {
+      this.attendants.push({ id: i, name: "Anolli Bozyni", checked: false })
     }
   }
 });
@@ -23,7 +50,7 @@ export default defineComponent({
 <template>
   <div id="teacher-write-att">
     <div id="teacher-write-att-head">
-      <ScheduleCalePad />
+      <ScheduleCalePad :readonly="true" :date="date" :month="month" :year="year" />
       <div id="teacher-write-att-head-class">
         <i class="fa-solid fa-person-running"></i>
         <p>OSW2</p>
@@ -32,25 +59,21 @@ export default defineComponent({
     </div>
     <div id="teacher-write-att-filter" class="iconed-in">
       <i class="fa-solid fa-magnifying-glass in-ico"></i>
-      <input class="in" type="text" placeholder="Attendant name...">
+      <input v-model="srchVal" class="in" type="text" placeholder="">
     </div>
     <div id="teacher-write-att-list" class="scroll">
-      <div v-for="attendant in attendants" :key="attendant.id" class="teacher-write-att-item">
-        <CCheckbox v-model:checked="checked" />
+      <div v-for="attendant in filteredAttendants" :key="attendant.id" class="teacher-write-att-item">
+        <CCheckbox v-model:checked="attendant.checked" />
         <p>{{ attendant.id }} {{ attendant.name }}</p>
-      </div>
-      <div class="teacher-write-att-item">
-        <CCheckbox v-model:checked="checked" />
-        <p>2 Alois Jirásek</p>
       </div>
     </div>
     <div id="teacher-write-att-act">
       <div id="teacher-write-att-act-all">
-        <CCheckbox v-model:checked="checked" />
-        <div>Select all</div>
+        <CCheckbox :checked="allFilteredChecked" @click="toggleAll" />
+        <div>{{ noneFilteredChecked ? "Select all" : "Unselect all" }}</div>
       </div>
       <button class="btn-1">Save</button>
-      <button class="btn-2">Back</button>
+      <button class="btn-2" @click="goTo">Back</button>
     </div>
   </div>
 </template>

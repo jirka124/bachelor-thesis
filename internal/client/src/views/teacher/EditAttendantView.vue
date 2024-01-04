@@ -5,16 +5,44 @@ import FieldInput from "@/components/FieldInput.vue";
 export default defineComponent({
   name: "EditAttendantView",
   components: { FieldInput },
+  data() {
+    return {
+      FIELDS: [
+        {
+          name: "id",
+          displayName: "ID",
+          type: "text",
+          ico: "fa-solid fa-database",
+          isDisabled: true
+        },
+        {
+          name: "name",
+          displayName: "Name",
+          type: "text",
+          ico: "fa-solid fa-database",
+        },
+      ],
+      values: {
+        id: "AUTO",
+        name: "",
+      }
+    }
+  },
+  methods: {
+    goToChoose() {
+      this.$router.push({ name: "edit-class" });
+    }
+  }
 });
 </script>
 
 <template>
   <div id="teacher-edit-att">
-    <FieldInput v-for="i in new Array(2)" :key="i" />
+    <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" :value="values[field.name]" />
     <div id="teacher-edit-att-act">
       <button class="btn-1">Save</button>
       <button class="btn-2">Delete</button>
-      <button class="btn-3">Cancel</button>
+      <button class="btn-3" @click="goToChoose">Cancel</button>
     </div>
   </div>
 </template>

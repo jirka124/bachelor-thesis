@@ -3,71 +3,73 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ScheduleCaleChoose",
+  props: {
+    daysOfMonth: {
+      type: Array,
+      default() { return [] }
+    }
+  },
+  computed: {
+    datesByDayArr() {
+      let offset = 0;
+      if (this.daysOfMonth.length > 0) {
+        const firstDay = this.daysOfMonth[0].getDay();
+        offset = firstDay - 1; // 1 (Monday index)
+        if (offset < 0) offset = 6;
+      }
+
+      const dateArr = [
+        ["Mon"],
+        ["Tues"],
+        ["Wed"],
+        ["Thurs"],
+        ["Fri"],
+        ["Sat"],
+        ["Sun"],
+      ];
+
+      for (let i = 0; i < offset; i++) {
+        dateArr[i].push({
+          isReplacement: true,
+          forDate: -offset + i
+        });
+      }
+
+      this.daysOfMonth.map(date => {
+        let dateArrInd = date.getDay() - 1;
+        if (dateArrInd < 0) dateArrInd = dateArr.length - 1;
+        dateArr[dateArrInd].push(date);
+      })
+
+      return dateArr;
+    }
+  },
+  methods: {
+    getKey(date, day) {
+      if (date.isReplacement) return `${day[0]}_${date.forDate}`;
+      return typeof date === "string" ? `${date}_head` : `${day[0]}_${date.getDate()}`;
+    },
+    getClass(i) {
+      return `schedule-cale-choose-col-${i === 0 ? "day" : "date"}`;
+    },
+    getContent(date) {
+      if (date.isReplacement) return "";
+      return typeof date === "string" ? date : date.getDate();
+    },
+    onClick(date) {
+      if (date.isReplacement || typeof date === "string") return;
+      this.$emit("choose-date", date.getDate());
+    }
+  }
 });
 </script>
 
 <template>
   <div class="schedule-cale-choose">
     <div class="schedule-cale-choose-tbl">
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Mon</div>
-        <div class="schedule-cale-choose-col-date"></div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-      </div>
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Tues</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-      </div>
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Wed</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-      </div>
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Thurs</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-      </div>
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Fri</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">31</div>
-      </div>
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Sat</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-      </div>
-      <div class="schedule-cale-choose-col">
-        <div class="schedule-cale-choose-col-day">Sun</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
-        <div class="schedule-cale-choose-col-date">x</div>
+      <div v-for="day in datesByDayArr" :key="day[0]" class="schedule-cale-choose-col">
+        <div v-for="(date, i) in day" :key="getKey(date, day[0])" :class="getClass(i)" @click="onClick(date)">{{
+          getContent(date) }}</div>
       </div>
     </div>
     <p class="schedule-cale-choose-notice">Find a day in past to write attandance for</p>

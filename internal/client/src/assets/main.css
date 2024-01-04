@@ -71,24 +71,27 @@ picture > img {
 }
 
 /* GENERAL INPUTS */
-.in {
+.sel {
+  cursor: pointer;
+}
+.in, .sel {
   background-color: #FDFDFD;
   padding: 8px;
   border: 2px solid #D1D1D1;
   outline: none;
   border-radius: 4px;
 }
-.in::placeholder {
+.in::placeholder, .sel::placeholder {
   color: #D1D1D1;
 }
-.in:focus {
+.in:focus, .sel:focus {
   border: 2px solid black;
 }
-.iconed-in {
+.iconed-in, .iconed-sel {
   position: relative;
 }
 
-.iconed-in .in-ico {
+.iconed-in .in-ico, .iconed-sel .sel-ico {
   position: absolute;
   top: 50%;
   left: 0;
@@ -96,10 +99,10 @@ picture > img {
   color: #D1D1D1;
   transform: translate(10px, -50%);
 }
-.iconed-in:focus-within .in-ico {
+.iconed-in:focus-within .in-ico, .iconed-sel:focus-within .sel-ico {
   color: black;
 }
-.iconed-in .in {
+.iconed-in .in, .iconed-sel .sel {
   width: 100%;
   padding-left: 40px;
 }

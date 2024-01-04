@@ -3,6 +3,41 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ReadAttendanceView",
+  data() {
+    return {
+      srchVal: "",
+      attendanceRecords: [
+        {
+          id: 1,
+          name: "Turniken Louis",
+          perc: 75
+        },
+        {
+          id: 4,
+          name: "Turniken Teodor",
+          perc: 64
+        },
+        {
+          id: 12,
+          name: "Alois Jirásek",
+          perc: 26
+        },
+      ]
+    }
+  },
+  computed: {
+    filteredRecords() {
+      return this.attendanceRecords.filter(data => String(data.id).startsWith(this.srchVal))
+    },
+    filteredPassed() {
+      return this.filteredRecords.filter(data => data.perc >= 70);
+    }
+  },
+  methods: {
+    goToChoose() {
+      this.$router.push({ name: "read-attend-choose" })
+    }
+  }
 });
 </script>
 
@@ -20,25 +55,21 @@ export default defineComponent({
     </div>
     <div id="teacher-read-att-srch" class="iconed-in">
       <i class="fa-solid fa-magnifying-glass in-ico"></i>
-      <input class="in" type="text" placeholder="Attendant name...">
+      <input v-model="srchVal" class="in" type="text" placeholder="Attendant name...">
     </div>
     <div id="teacher-read-att-list">
-      <div class="teacher-read-att-list-item">
-        <p class="teacher-read-att-list-item-name">1 Jiří Žák</p>
-        <p class="teacher-read-att-list-item-perc">75%</p>
-        <i class="fa-regular fa-square-check" style="color: #90C418;"></i>
-      </div>
-      <div class="teacher-read-att-list-item">
-        <p class="teacher-read-att-list-item-name">1 Numero uno 2</p>
-        <p class="teacher-read-att-list-item-perc">65%</p>
-        <i class="fa-regular fa-circle-xmark" style="color: #FC4850;"></i>
+      <div v-for="rec in filteredRecords" :key="rec.id" class="teacher-read-att-list-item">
+        <p class="teacher-read-att-list-item-name">{{ rec.id + " " + rec.name }}</p>
+        <p class="teacher-read-att-list-item-perc">{{ rec.perc }}%</p>
+        <i v-if="rec.perc >= 70" class="fa-regular fa-square-check" style="color: #90C418;"></i>
+        <i v-else class="fa-regular fa-circle-xmark" style="color: #FC4850;"></i>
       </div>
     </div>
     <div id="teacher-read-att-summary">
-      Passed 1 of 5 students
+      Passed {{ filteredPassed.length }} of {{ filteredRecords.length }} students
     </div>
     <div id="teacher-read-att-back">
-      <button class="btn-2">Back</button>
+      <button class="btn-2" @click="goToChoose">Back</button>
     </div>
   </div>
 </template>
