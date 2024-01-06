@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useTeacherStore } from '@/stores/teacher'
+import { api } from '@/boot/axios.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,7 +20,7 @@ const router = createRouter({
           component: () => import('../views/teacher/ScheduleView.vue')
         },
         {
-          path: 'write-attend',
+          path: 'write-attend/:classId',
           name: 'write-attend',
           component: () => import('../views/teacher/WriteAttendanceView.vue')
         },
@@ -28,7 +30,7 @@ const router = createRouter({
           component: () => import('../views/teacher/ReadAttendanceChooseView.vue')
         },
         {
-          path: 'read-attend',
+          path: 'read-attend/:classId',
           name: 'read-attend',
           component: () => import('../views/teacher/ReadAttendanceView.vue')
         },
@@ -38,7 +40,7 @@ const router = createRouter({
           component: () => import('../views/teacher/EditClassChooseView.vue')
         },
         {
-          path: 'edit-class',
+          path: 'edit-class/:classId',
           name: 'edit-class',
           component: () => import('../views/teacher/EditClassView.vue')
         },
@@ -48,7 +50,7 @@ const router = createRouter({
           component: () => import('../views/teacher/CreateClassView.vue')
         },
         {
-          path: 'edit-att',
+          path: 'edit-att/:attendId',
           name: 'edit-att',
           component: () => import('../views/teacher/EditAttendantView.vue')
         },
@@ -72,6 +74,22 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+router.beforeEach(async (to) => {
+  const teacherStore = useTeacherStore()
+  const isTeacherPath = to.matched.some(
+    (match) => match.path === '/teacher' || match.path === '/auth'
+  )
+  if (isTeacherPath) {
+    let r = (await api.post('teacher/is-logged')).data
+    if (r.reqState !== null) console.log(r.reqState)
+
+    if (r.result.hasOwnProperty('isLogged')) teacherStore.setIsLoggedAsTeacher(r.result.isLogged)
+
+    if (teacherStore.isLoggedAsTeacher && to.name === 'login') return { name: 'schedule' }
+    if (!teacherStore.isLoggedAsTeacher && to.name !== 'login') return { name: 'login' }
+  }
 })
 
 export default router

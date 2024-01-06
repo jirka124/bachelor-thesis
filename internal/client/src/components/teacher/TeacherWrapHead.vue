@@ -1,5 +1,7 @@
 <script>
 import { defineComponent } from "vue";
+import { mapState } from 'pinia';
+import { useTeacherStore } from "@/stores/teacher";
 
 export default defineComponent({
   name: "TeacherWrapHead",
@@ -19,9 +21,24 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapState(useTeacherStore, ['teacherName']),
     routeName() {
       return this.routeNames[this.$route.name].toUpperCase();
     }
+  },
+  methods: {
+    async logout() {
+      let r;
+      try {
+        r = (
+          await this.$api.post("teacher/logout")
+        ).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    },
   }
 });
 </script>
@@ -31,7 +48,7 @@ export default defineComponent({
     <div id="teacher-wrap-head-sec">{{ routeName }}</div>
     <div id="teacher-wrap-head-usr">
       <i class="fa-solid fa-user-tie"></i>
-      <p>teacher_login@uhk.cz</p>
+      <p>{{ teacherName }}@uhk.cz <i @click="logout" class="fa-solid fa-right-from-bracket"></i></p>
     </div>
   </div>
 </template>
@@ -60,4 +77,9 @@ export default defineComponent({
 }
 
 #teacher-wrap-head-usr>p {}
+
+#teacher-wrap-head-usr>p>i {
+  padding: 0 6px;
+  cursor: pointer;
+}
 </style>

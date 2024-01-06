@@ -1,13 +1,16 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useTeacherStore } from "@/stores/teacher";
 import TableComp from "@/components/TableComp.vue";
 
 export default defineComponent({
   name: "ReadAttendanceChooseView",
   components: { TableComp },
-  data() {
-    return {
-      tableConfig: {
+  computed: {
+    ...mapStores(useTeacherStore),
+    tableConfig() {
+      return {
         control: [
           {
             name: "id",
@@ -51,65 +54,66 @@ export default defineComponent({
             displayName: ""
           }
         ],
-        data: [
-          {
-            id: 2,
-            subject: "subject",
-            day: "day",
-            tBy: "time by",
-            tTill: "time till",
-            recurrence: "recurrence",
-            cBy: "continuance by",
-            cTill: "continuance till",
-            minAtt: "min. attend",
-            act1: {
-              ico: "fa-solid fa-eye",
-              event: "view-class",
-              eventParams: { id: 1 }
-            }
-          },
-          {
-            id: 7,
-            subject: "subject",
-            day: "day",
-            tBy: "time by",
-            tTill: "time till",
-            recurrence: "recurrence",
-            cBy: "continuance by",
-            cTill: "continuance till",
-            minAtt: "min. attend",
-            act1: {
-              ico: "fa-solid fa-eye",
-              event: "view-class",
-              eventParams: { id: 2 }
-            }
-          },
-          {
-            id: 4,
-            subject: "subject",
-            day: "day",
-            tBy: "time by",
-            tTill: "time till",
-            recurrence: "recurrence",
-            cBy: "continuance by",
-            cTill: "continuance till",
-            minAtt: "min. attend",
-            act1: {
-              ico: "fa-solid fa-eye",
-              event: "view-class",
-              eventParams: { id: 3 }
-            }
-          },
-        ]
+        data: this.teacherStore.allTeacherClasses.map(c => {
+          const cc = this.deepCopy(c);
+          cc.tBy = `${cc.tBy.split(":")[0]}:${cc.tBy.split(":")[1]}`;
+          cc.tTill = `${cc.tTill.split(":")[0]}:${cc.tTill.split(":")[1]}`;
+          cc.cBy = new Date(cc.cBy).toLocaleDateString();
+          cc.cTill = new Date(cc.cTill).toLocaleDateString();
+          cc.day = this.resolveDayByInd(cc.day);
+          cc.recurrence = this.resolveRecurrByKey(cc.recurrence);
+
+          cc.act1 = {
+            ico: "fa-solid fa-eye",
+            event: "view-class",
+            eventParams: { id: cc.id }
+          };
+
+          return cc;
+        })
       }
     }
   },
   methods: {
     viewClass({ id }) {
-      console.log(id);
-      this.$router.push({ name: "read-attend" })
+      this.$router.push({ name: "read-attend", params: { classId: id } })
+    },
+    resolveDayByInd(ind) {
+      const days = ["Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"];
+      return days[ind] || "";
+    },
+    resolveRecurrByKey(key) {
+      const recurrs = {
+        once: "Once",
+        e1week: "Every week",
+        e2week: "Every 2 week",
+        e3week: "Every 3 week"
+      }
+      return recurrs[key] || "";
+    },
+    async fetchClasses() {
+      // fetch list of classes that belongs to logged teacher
+      let r;
+      try {
+        r = (await this.$api.post("teacher/view-read-attend-choose-csr")).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("classes"))
+          this.teacherStore.setAllTeacherClasses(r.result.classes);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
+  },
+  mounted() {
+    this.fetchClasses();
+  },
 });
 </script>
 

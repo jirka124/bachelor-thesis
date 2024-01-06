@@ -1,11 +1,37 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useTeacherStore } from "@/stores/teacher";
 import ScheduleDay from "@/components/schedule/ScheduleDay.vue";
 import ScheduleMonth from "@/components/schedule/ScheduleMonth.vue";
 
 export default defineComponent({
   name: "ScheduleView",
-  components: { ScheduleDay, ScheduleMonth }
+  components: { ScheduleDay, ScheduleMonth },
+  computed: {
+    ...mapStores(useTeacherStore),
+    daySchedule() {
+      return this.getDaySchedule(this.teacherStore.allTeacherClasses, new Date());
+    }
+  },
+  methods: {
+    async fetchClasses() {
+      // fetch list of classes that belongs to logged teacher
+      let r;
+      try {
+        r = (await this.$api.post("teacher/view-schedule-csr")).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("classes"))
+          this.teacherStore.setAllTeacherClasses(r.result.classes);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
+  async mounted() {
+    await this.fetchClasses();
+  },
 });
 </script>
 
@@ -14,7 +40,7 @@ export default defineComponent({
     <div id="teacher-sched-quick">
       <div id="teacher-sched-quick-today">
         <div>TODAY</div>
-        <ScheduleDay />
+        <ScheduleDay :daySchedule="daySchedule" />
       </div>
       <picture id="teacher-sched-quick-illus">
         <source type="image/webp" srcset="@/assets/analytic-illustratino.webp" media="(min-width: 512px)" />
@@ -23,7 +49,7 @@ export default defineComponent({
       </picture>
     </div>
     <div id="teacher-sched-cale">
-      <ScheduleMonth />
+      <ScheduleMonth :allClasses="teacherStore.allTeacherClasses" />
     </div>
 
   </div>

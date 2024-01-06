@@ -5,7 +5,30 @@ import AuthRole from "@/components/authentize/AuthRole.vue";
 
 export default defineComponent({
   name: "LoginView",
-  components: { AuthHead, AuthRole }
+  components: { AuthHead, AuthRole },
+  data() {
+    return {
+      username: "",
+      password: ""
+    }
+  },
+  methods: {
+    async login() {
+      let r;
+      try {
+        r = (
+          await this.$api.post("teacher/login", {
+            username: this.username,
+            pass: this.password,
+          })
+        ).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
 });
 </script>
 
@@ -16,15 +39,15 @@ export default defineComponent({
     <div id="auth-login-form">
       <div class="iconed-in">
         <i class="fa-solid fa-id-card in-ico"></i>
-        <input class="in" type="text" placeholder="Login">
+        <input v-model="username" @keydown.enter="login" class="in" type="text" placeholder="Login">
       </div>
       <div class="iconed-in">
         <i class="fa-solid fa-lock in-ico"></i>
-        <input class="in" type="password" placeholder="Password">
+        <input v-model="password" @keydown.enter="login" class="in" type="password" placeholder="Password">
       </div>
 
       <div id="auth-login-form-act">
-        <button class="btn-1">Login</button>
+        <button class="btn-1" @click="login">Login</button>
         <button class="btn-3">Forgotten password?</button>
       </div>
     </div>

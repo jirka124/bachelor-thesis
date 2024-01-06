@@ -1,5 +1,7 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useTeacherStore } from "@/stores/teacher";
 import FieldInput from "@/components/FieldInput.vue";
 import TableComp from "@/components/TableComp.vue";
 
@@ -8,6 +10,8 @@ export default defineComponent({
   components: { FieldInput, TableComp },
   data() {
     return {
+      saveLock: false,
+      deleteLock: false,
       FIELDS: [
         {
           name: "id",
@@ -114,7 +118,7 @@ export default defineComponent({
         },
       ],
       values: {
-        id: "AUTO",
+        id: "NONE",
         subject: "",
         day: "monday",
         tBy: this.splitDateTime(this.localAsUTC())[1].slice(0, 5),
@@ -123,8 +127,13 @@ export default defineComponent({
         cBy: this.splitDateTime(this.localAsUTC())[0],
         cTill: this.splitDateTime(this.localAsUTC())[0],
         minAtt: 70,
-      },
-      tableConfig: {
+      }
+    }
+  },
+  computed: {
+    ...mapStores(useTeacherStore),
+    tableConfig() {
+      return {
         allowNew: true,
         control: [
           {
@@ -141,35 +150,17 @@ export default defineComponent({
             displayName: ""
           }
         ],
-        data: [
-          {
-            id: 2,
-            name: "Jurička Matěj",
-            act1: {
-              ico: "fa-solid fa-pen",
-              event: "edit-attend",
-              eventParams: { id: 2 }
-            }
-          },
-          {
-            id: 7,
-            name: "Alois Jirásek",
-            act1: {
-              ico: "fa-solid fa-pen",
-              event: "edit-attend",
-              eventParams: { id: 7 }
-            }
-          },
-          {
-            id: 1,
-            name: "Gargamel",
-            act1: {
-              ico: "fa-solid fa-pen",
-              event: "edit-attend",
-              eventParams: { id: 1 }
-            }
-          },
-        ]
+        data: this.teacherStore.editedClassAttends.map(a => {
+          const aa = this.deepCopy(a);
+
+          aa.act1 = {
+            ico: "fa-solid fa-pen",
+            event: "edit-attend",
+            eventParams: { id: aa.id }
+          };
+
+          return aa;
+        })
       }
     }
   },
@@ -178,26 +169,97 @@ export default defineComponent({
       this.$router.push({ name: "edit-class-choose" });
     },
     createNew() {
-      this.$router.push({ name: "create-att" })
+      const classId = parseInt(this.$route.params.classId) || null;
+      this.$router.push({ name: "create-att", query: { classId } })
     },
     editAttend({ id }) {
-      console.log(id);
-      this.$router.push({ name: "edit-att" })
+      const classId = parseInt(this.$route.params.classId) || null;
+      this.$router.push({ name: "edit-att", params: { attendId: id }, query: { classId } });
     },
     splitDateTime(dateStr) {
       return dateStr.slice(0, -1).split("T")
+    },
+    resolveDayByInd(ind) {
+      const days = ["monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"];
+      return days[ind] || "";
+    },
+    async fetchClass() {
+      // fetch current fields of class and its attendants
+      let r;
+      try {
+        const classId = parseInt(this.$route.params.classId) || null;
+        if (classId === null) return;
+
+        r = (await this.$api.post("teacher/view-edit-class-csr", { classId })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("classObj"))
+          this.teacherStore.setEditedClass(r.result.classObj);
+        if (r.result.hasOwnProperty("attendants"))
+          this.teacherStore.setEditedClassAttends(r.result.attendants);
+
+        this.values.id = this.teacherStore.editedClass.id || "NONE";
+        this.values.subject = this.teacherStore.editedClass.subject || "";
+        this.values.day = this.resolveDayByInd(this.teacherStore.editedClass.day) || "monday";
+        this.values.tBy = this.teacherStore.editedClass.tBy.slice(0, 5) || this.splitDateTime(this.localAsUTC())[1].slice(0, 5);
+        this.values.tTill = this.teacherStore.editedClass.tTill.slice(0, 5) || this.splitDateTime(this.localAsUTC())[1].slice(0, 5);
+        this.values.recurrence = this.teacherStore.editedClass.recurrence || "once";
+        this.values.cBy = this.splitDateTime(this.teacherStore.editedClass.cBy)[0] || this.splitDateTime(this.localAsUTC())[0];
+        this.values.cTill = this.splitDateTime(this.teacherStore.editedClass.cTill)[0] || this.splitDateTime(this.localAsUTC())[0];
+        this.values.minAtt = this.teacherStore.editedClass.minAtt || 70;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async saveClass() {
+      if (this.saveLock) return;
+      this.saveLock = true;
+
+      let r;
+      try {
+        r = (await this.$api.post("teacher/save-class", { ...this.values })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else this.goToChoose();
+      } catch (error) {
+        console.error(error);
+      }
+      this.saveLock = false;
+    },
+    async deleteClass() {
+      if (this.deleteLock) return;
+      this.deleteLock = true;
+
+      const classId = parseInt(this.$route.params.classId) || null;
+      let r;
+      try {
+        r = (await this.$api.post("teacher/delete-class", { classId })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else this.goToChoose();
+      } catch (error) {
+        console.error(error);
+      }
+      this.deleteLock = false;
     }
-  }
+  },
+  mounted() {
+    this.fetchClass();
+  },
 });
 </script>
 
 <template>
   <div id="teacher-edit-cls">
     <div id="teacher-edit-cls-attrs">
-      <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" :value="values[field.name]" />
+      <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" v-model:value="values[field.name]" />
       <div id="teacher-edit-cls-attrs-act">
-        <button class="btn-1">Save</button>
-        <button class="btn-2">Delete</button>
+        <button class="btn-1" @click="saveClass">Save</button>
+        <button class="btn-2" @click="deleteClass">Delete</button>
         <button class="btn-3" @click="goToChoose">Cancel</button>
       </div>
     </div>

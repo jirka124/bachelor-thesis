@@ -7,6 +7,7 @@ export default defineComponent({
   components: { FieldInput },
   data() {
     return {
+      createLock: false,
       FIELDS: [
         {
           name: "id",
@@ -30,7 +31,23 @@ export default defineComponent({
   },
   methods: {
     goToChoose() {
-      this.$router.push({ name: "edit-class" });
+      const classId = parseInt(this.$route.query.classId) || null;
+      this.$router.push({ name: "edit-class", params: { classId } });
+    },
+    async createAttend() {
+      if (this.createLock) return;
+      this.createLock = true;
+
+      const classId = parseInt(this.$route.query.classId) || null;
+      let r;
+      try {
+        r = (await this.$api.post("teacher/create-attendant", { ...this.values, classId })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else this.goToChoose();
+      } catch (error) {
+        console.error(error);
+      }
+      this.createLock = false;
     }
   }
 });
@@ -38,9 +55,9 @@ export default defineComponent({
 
 <template>
   <div id="teacher-create-att">
-    <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" :value="values[field.name]" />
+    <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" v-model:value="values[field.name]" />
     <div id="teacher-create-att-act">
-      <button class="btn-1">Create</button>
+      <button class="btn-1" @click="createAttend">Create</button>
       <button class="btn-3" @click="goToChoose">Cancel</button>
     </div>
   </div>

@@ -7,6 +7,7 @@ export default defineComponent({
   components: { FieldInput },
   data() {
     return {
+      createLock: false,
       FIELDS: [
         {
           name: "id",
@@ -131,6 +132,20 @@ export default defineComponent({
     },
     splitDateTime(dateStr) {
       return dateStr.slice(0, -1).split("T")
+    },
+    async createClass() {
+      if (this.createLock) return;
+      this.createLock = true;
+
+      let r;
+      try {
+        r = (await this.$api.post("teacher/create-class", { ...this.values })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else this.goToChoose();
+      } catch (error) {
+        console.error(error);
+      }
+      this.createLock = false;
     }
   }
 });
@@ -138,9 +153,9 @@ export default defineComponent({
 
 <template>
   <div id="teacher-create-cls">
-    <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" :value="values[field.name]" />
+    <FieldInput v-for="field in FIELDS" :key="field.name" :field="field" v-model:value="values[field.name]" />
     <div id="teacher-create-cls-act">
-      <button class="btn-1">Create</button>
+      <button class="btn-1" @click="createClass">Create</button>
       <button class="btn-3" @click="goToChoose">Cancel</button>
     </div>
   </div>

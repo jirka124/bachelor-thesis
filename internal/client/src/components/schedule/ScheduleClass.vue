@@ -3,9 +3,16 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ScheduleClass",
+  props: {
+    classObj: {
+      type: Object,
+      default: null
+    }
+  },
   methods: {
     goTo() {
-      this.$router.push({ name: "write-attend" })
+      if (this.classObj === null) return;
+      this.$router.push({ name: "write-attend", params: { classId: this.classObj.id }, query: { recurrId: this.classObj.recurrId } })
     }
   }
 });
@@ -13,8 +20,9 @@ export default defineComponent({
 
 <template>
   <div class="schedule-class" @click="goTo()">
-    <p class="schedule-class-short">OSW2</p>
-    <p class="schedule-class-inter">16:00 - 17:30</p>
+    <p class="schedule-class-short">{{ classObj !== null ? classObj.subject : "NONE" }}</p>
+    <p class="schedule-class-inter">{{ classObj !== null ? classObj.tBy.slice(0, 5) : "NONE" }} - {{ classObj !== null ?
+      classObj.tTill.slice(0, 5) : "NONE" }}</p>
   </div>
 </template>
 

@@ -1,11 +1,35 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useTeacherStore } from "@/stores/teacher";
 import TeacherMenu from "@/components/teacher/TeacherMenu.vue";
 import TeacherWrapHead from "@/components/teacher/TeacherWrapHead.vue";
 
 export default defineComponent({
   name: "TeacherLayout",
-  components: { TeacherMenu, TeacherWrapHead }
+  components: { TeacherMenu, TeacherWrapHead },
+  computed: {
+    ...mapStores(useTeacherStore),
+  },
+  methods: {
+    async whoami() {
+      let r;
+      try {
+        r = (await this.$api.post("teacher/whoami")).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("whoami")) {
+          this.teacherStore.setTeacherName(r.result.whoami.teacherName);
+          this.teacherStore.setTeacherId(r.result.whoami.teacherId);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  mounted() {
+    this.whoami();
+  },
 });
 </script>
 

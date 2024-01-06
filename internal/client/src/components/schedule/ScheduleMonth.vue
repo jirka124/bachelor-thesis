@@ -7,6 +7,14 @@ import ScheduleDay from "@/components/schedule/ScheduleDay.vue";
 export default defineComponent({
   name: "ScheduleMonth",
   components: { ScheduleCalePad, ScheduleCaleChoose, ScheduleDay },
+  props: {
+    allClasses: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       dateSelected: null,
@@ -23,6 +31,9 @@ export default defineComponent({
       date.setFullYear(this.yearSelected);
 
       return date;
+    },
+    daySchedule() {
+      return this.getDaySchedule(this.allClasses, this.dateObjSelected);
     }
   },
   methods: {
@@ -60,10 +71,6 @@ export default defineComponent({
   },
   created() {
     this.setSelectedDate();
-  },
-  mounted() {
-    console.log(this.daysOfMonth(this.dateObjSelected));
-    console.log(this.daysOfMonth(new Date(Number(new Date()) - 5 * 24 * 60 * 60 * 1000)))
   }
 });
 </script>
@@ -78,7 +85,7 @@ export default defineComponent({
     <div class="schedule-month-views">
       <ScheduleCaleChoose :daysOfMonth="daysOfMonth(dateObjSelected)" @choose-date="chooseDate" />
       <div v-show="dateSelected" class="schedule-month-day">
-        <ScheduleDay orientation="V" />
+        <ScheduleDay orientation="V" :daySchedule="daySchedule" />
         <button @click="dateSelected = null" class="btn-2">Back</button>
       </div>
     </div>

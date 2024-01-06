@@ -9,6 +9,29 @@ export default defineComponent({
     orientation: {
       type: String,
       default: "H",
+    },
+    daySchedule: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  computed: {
+    sortedDaySchedule() {
+      const MIN_S = 60;
+      const HOUR_S = 60 * 60;
+
+      return this.daySchedule.toSorted((a, b) => {
+        const aa = a.tBy.split(":");
+        const bb = b.tBy.split(":");
+        const aSecs = aa[0] * HOUR_S + aa[1] * MIN_S;
+        const bSecs = bb[0] * HOUR_S + bb[1] * MIN_S;
+
+        if (aSecs < bSecs) return -1;
+        else if (bSecs > aSecs) return 1;
+        return 0;
+      })
     }
   }
 });
@@ -16,7 +39,7 @@ export default defineComponent({
 
 <template>
   <div class="schedule-day scroll" :class="{ horiz: orientation !== 'V', verti: orientation === 'V' }">
-    <ScheduleClass v-for="i in [1, 2, 3, 4, 5]" :key="i" />
+    <ScheduleClass v-for="classObj in sortedDaySchedule" :key="classObj.id" :classObj="classObj" />
   </div>
 </template>
 
