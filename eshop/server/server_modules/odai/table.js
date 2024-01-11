@@ -738,7 +738,9 @@ class OdaiTable {
       if (reinvObj.toAddIds.length > 0) {
         const valueArr = reinvObj.toAddIds.map((toAddId) => {
           return `(${reinvId}, ${tableKeys
-            .map((tableKey) => toAddId[tableKey])
+            .map((tableKey) =>
+              toAddId[tableKey] === null ? 0 : toAddId[tableKey]
+            )
             .join(",")})`;
         });
 
