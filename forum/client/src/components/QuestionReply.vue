@@ -3,17 +3,23 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "QuestionReply",
+  props: {
+    reply: {
+      type: Object,
+      default: null
+    }
+  }
 });
 </script>
 
 <template>
   <div class="question-reply">
     <p class="question-reply-title">
-      Why are crouches all around my place in London?
+      {{ reply ? reply.reply : "ERROR" }}
     </p>
     <div class="question-reply-more">
-      <p>20.10.2001</p>
-      <p>Julius Ceasar</p>
+      <p>{{ reply ? new Date(reply.date).toLocaleDateString() : "ERROR" }}</p>
+      <p>{{ reply ? reply.name : "ERROR" }}</p>
     </div>
   </div>
 </template>

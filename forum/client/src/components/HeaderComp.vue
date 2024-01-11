@@ -5,12 +5,17 @@ export default defineComponent({
   name: "HeaderComp",
   data() {
     return {
-      srchOn: false
+      srchOn: false,
+      srchFor: ""
     }
   },
   methods: {
     closeWindow(e) {
       if (e.srcElement === this.$refs["closing-area"]) this.srchOn = false;
+    },
+    searchFor() {
+      this.$router.push({ name: "search-guest", query: { srchFor: this.srchFor } });
+      this.srchOn = false;
     }
   }
 });
@@ -32,8 +37,8 @@ export default defineComponent({
     <transition>
       <div v-show="srchOn" @click="closeWindow" id="header-srch-on" ref="closing-area">
         <div id="header-srch-on-act">
-          <input type="text" placeholder="Awaiting your orders">
-          <button class="btn-1">Search</button>
+          <input v-model="srchFor" @keydown.enter="searchFor" type="text" placeholder="Awaiting your orders">
+          <button @click="searchFor" class="btn-1">Search</button>
         </div>
         <div id="header-srch-on-off">
           <i class="fa-solid fa-xmark"></i>

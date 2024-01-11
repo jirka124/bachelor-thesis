@@ -1,39 +1,104 @@
 <script>
 import { defineComponent } from "vue";
+import { api } from "@/boot/axios.js";
+import { mapStores } from "pinia";
+import { useGuestStore } from "@/stores/guest";
 import QuestionReply from "@/components/QuestionReply.vue";
 
 export default defineComponent({
   name: "DiscussionView",
-  components: { QuestionReply }
+  components: { QuestionReply },
+  data() {
+    return {
+      createLock: false,
+      replyVal: "",
+      nameVal: "",
+    }
+  },
+  computed: {
+    ...mapStores(useGuestStore),
+    post() {
+      return this.guestStore.viewedPost;
+    },
+    postReplies() {
+      return this.post ? this.post.replies || [] : []
+    }
+  },
+  methods: {
+    async fetchViewedPost() {
+      // fetch post details
+      const postId = this.$route.params.postId || null;
+      if (postId === null) return;
+
+      const reqBody = { postId };
+      if (this.isServer || true) reqBody.path = this.$route.fullPath;
+
+      let r;
+      try {
+        r = (await api.post("general/view-discussion-ssr", reqBody)).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("post"))
+          this.guestStore.setViewedPost(r.result.post);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async createReply() {
+      if (this.createLock) return;
+      this.createLock = true;
+
+      const postId = this.$route.params.postId || null;
+      if (postId === null) return;
+
+      let r;
+      try {
+        r = (await this.$api.post("general/create-reply", {
+          postId,
+          replyVal: this.replyVal,
+          nameVal: this.nameVal
+        })).data;
+
+        if (r.reqState !== null) console.log(r.reqState);
+        else {
+          this.guestStore.addViewedReply(r.result.replyObj);
+          this.replyVal = this.nameVal = "";
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.createLock = false;
+    }
+  },
+  async mounted() {
+    this.fetchViewedPost();
+  },
 });
 </script>
 
 <template>
   <div id="discuss">
     <div id="discuss-meta">
-      <p>20.10.2001</p>
-      <b>Julius Ceasar</b>
+      <p>{{ post ? new Date(post.date).toLocaleDateString() : "ERROR" }}</p>
+      <b>{{ post ? post.name : "ERROR" }}</b>
     </div>
-    <h1 id="discuss-title">The Title of the question</h1>
+    <h1 id="discuss-title">{{ post ? post.title : "ERROR" }}</h1>
     <p id="discuss-question">
-      It goes without saying that a wide action of a number of the critical thinking provides benefit from The
-      Availability of Promising Capacity (Alfonzo Hales in The Book of the Functional Programming)
-      To be quite frank, in the context of deep analysis enforces the overall effect of this relational approach. This can
-      eventually cause certain issues.
-      Consequently, the unification of the consequential risks discards the principle of the preliminary action plan.
+      {{ post ? post.description : "ERROR" }}
     </p>
     <div id="discuss-echos">
-      <p>104 views</p>
-      <p>14 replies</p>
+      <p>{{ post ? post.viewsCount || 0 : 0 }} views</p>
+      <p>{{ post ? post.replyCount || 0 : 0 }} replies</p>
     </div>
     <p id="discuss-reply-title">Do you want to reply?</p>
     <div id="discuss-leave-reply">
-      <textarea placeholder="The answer you would like to leave" class="in"></textarea>
-      <input type="text" placeholder="Your username" class="in">
-      <button class="btn-1">Submit</button>
+      <textarea v-model="replyVal" placeholder="The answer you would like to leave" class="in"></textarea>
+      <input v-model="nameVal" type="text" placeholder="Your username" class="in">
+      <button @click="createReply" class="btn-1">Submit</button>
     </div>
     <div id="discuss-replies">
-      <QuestionReply v-for="i in new Array(8).fill(null).map(i => i)" :key="i" />
+      <QuestionReply v-for="reply in postReplies" :key="reply.postReplyId" :reply="reply" />
     </div>
   </div>
 </template>

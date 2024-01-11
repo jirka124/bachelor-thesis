@@ -1,11 +1,40 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useGuestStore } from "@/stores/guest";
 import HomeBanner from "@/components/home/HomeBanner.vue";
 import QuestionPreview from "@/components/QuestionPreview.vue";
 
 export default defineComponent({
   name: "HomeView",
   components: { HomeBanner, QuestionPreview },
+  computed: {
+    ...mapStores(useGuestStore),
+    posts() {
+      return this.guestStore.trendingPosts;
+    }
+  },
+  methods: {
+    goToCreate() {
+      this.$router.push({ name: "ask-guest" });
+    },
+    async fetchTrendingPosts() {
+      // fetch treding now posts
+      let r;
+      try {
+        r = (await this.$api.post("general/view-home-csr")).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("posts"))
+          this.guestStore.setTrendingPosts(r.result.posts);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
+  async mounted() {
+    this.fetchTrendingPosts();
+  },
 });
 </script>
 
@@ -14,7 +43,7 @@ export default defineComponent({
     <HomeBanner />
     <div id="home-act">
       <h1 id="home-act-call">Looking for own question to be answered?</h1>
-      <button id="home-act-now" class="btn-1">Ask Question</button>
+      <button @click="goToCreate" id="home-act-now" class="btn-1">Ask Question</button>
     </div>
     <p id="home-welcome">
       Welcome to Mingle debate forum, feel free to go through any of user questions and answer them if you know the
@@ -22,10 +51,7 @@ export default defineComponent({
       debate is here for you.
     </p>
     <div id="home-trending">
-      <QuestionPreview />
-      <QuestionPreview />
-      <QuestionPreview />
-      <QuestionPreview />
+      <QuestionPreview v-for="post in posts" :key="post.postId" :post="post" />
     </div>
   </div>
 </template>

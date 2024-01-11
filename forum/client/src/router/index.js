@@ -25,7 +25,7 @@ const router = createRouter({
           component: () => import('../views/AskQuestionView.vue')
         },
         {
-          path: 'discuss-guest',
+          path: 'discuss-guest/:postId',
           name: 'discuss-guest',
           component: () => import('../views/DiscussionView.vue')
         }

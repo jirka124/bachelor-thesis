@@ -3,23 +3,34 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "QuestionPreview",
+  props: {
+    post: {
+      type: Object,
+      default: null
+    }
+  },
+  methods: {
+    goToPost() {
+      this.$router.push({ name: "discuss-guest", params: { postId: this.post.postId } });
+    }
+  }
 });
 </script>
 
 <template>
-  <div class="question-prev">
+  <div v-if="post" @click="goToPost" class="question-prev">
     <div class="question-prev-title">
-      <h3>Why are crouches all around my place in London?</h3>
+      <h3>{{ post.title || "ERROR" }}</h3>
       <div class="question-prev-title-art"><i class="fa-solid fa-comment-dots"></i></div>
     </div>
     <div class="question-prev-more">
       <div class="question-prev-more-main">
-        <p>20.10.2001</p>
-        <p>Julius Ceasar</p>
+        <p>{{ new Date(post.date).toLocaleDateString() || "ERROR" }}</p>
+        <p>{{ post.name || "ERROR" }}</p>
       </div>
       <div class="question-prev-more-info">
-        <p>104 views</p>
-        <p>14 replies</p>
+        <p>{{ post.viewCount || 0 }} views</p>
+        <p>{{ post.replyCount || 0 }} replies</p>
       </div>
     </div>
   </div>
