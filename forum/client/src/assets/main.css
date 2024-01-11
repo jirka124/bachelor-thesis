@@ -1,0 +1,82 @@
+/* PROJECT DEFAULTS */
+* {
+  font-family:
+    'PT Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  min-height: 100vh;
+  color: #757575;
+}
+picture {
+  display: block;
+}
+picture > img {
+  width: 100%;
+}
+
+/* CUSTOM SCROLL BARS */
+.scroll::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+.scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #333;
+}
+.scroll:hover {
+  scrollbar-color: #ccc black;
+}
+.scroll::-webkit-scrollbar-track {
+  background: #ccc;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 6px;
+  border: 3px solid #ccc;
+}
+
+.scroll::-webkit-scrollbar-thumb:hover {
+  background-color: black;
+}
+
+/* GENERAL BUTTONS */
+.btn-1, .btn-2 {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.btn-1 {
+  color: white;
+  background-color: #64BFB5;
+  transition: 0.2s all;
+}
+.btn-1:hover {
+  background-color: #43a398;
+}
+.btn-2 {
+  color: #757575;
+  background-color: transparent;
+}
+
+/* GENERAL INPUT */
+.in {
+  padding: 8px;
+  border: 3px solid #64BFB5;
+  border-radius: 8px;
+  background-color: white;
+  outline: none;
+}
+.in:focus-within {
+  border-color: #64A1BF;
+}
