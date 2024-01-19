@@ -11,29 +11,58 @@ const nodeUtil = require("util");
 
 router.post("/view-home-csr", async function (req, res) {
   let reqState = null,
-    posts = [];
+    posts = [],
+    views = [],
+    replies = [];
 
   try {
     let r = await utilPre.retQuery(
-      `SELECT t1.post_id AS postId, t1.title, t1.name, t1.date, COUNT(t2.post_view_id) AS viewCount, COUNT(t3.post_reply_id) AS replyCount FROM post t1 LEFT JOIN post_view t2 ON t1.post_id = t2.post_id LEFT JOIN post_reply t3 ON t1.post_id = t3.post_id GROUP BY t1.post_id, t1.title, t1.name, t1.date ORDER BY RAND() LIMIT 6`,
+      `SELECT post_id AS postId, title, name, date FROM post ORDER BY RAND() LIMIT 6`,
       [],
       shared.Connect.connWrap
     );
     if (r.state) {
       posts = r.result;
     } else throw new Error("BN32YIENA3YANE8");
+
+    const postIds = posts.map((p) => p.postId);
+    if (postIds.length > 0) {
+      r = await utilPre.retQuery(
+        `SELECT post_id AS postId, COUNT(post_view_id) AS viewCount FROM post_view WHERE post_id IN (${postIds.join(
+          ","
+        )}) GROUP BY post_id`,
+        [],
+        shared.Connect.connWrap
+      );
+      if (r.state) {
+        views = r.result;
+      } else throw new Error("78EM4ENPP94ELNAG0");
+
+      r = await utilPre.retQuery(
+        `SELECT post_id AS postId, COUNT(post_reply_id) AS replyCount FROM post_reply WHERE post_id IN (${postIds.join(
+          ","
+        )}) GROUP BY post_id`,
+        [],
+        shared.Connect.connWrap
+      );
+      if (r.state) {
+        replies = r.result;
+      } else throw new Error("HIH064ENPP48E16WG");
+    }
   } catch (e) {
     console.log(e);
     reqState = e.message;
   }
 
-  res.send(JSON.stringify({ reqState, result: { posts } }));
+  res.send(JSON.stringify({ reqState, result: { posts, views, replies } }));
   res.end();
 });
 
 router.post("/view-search-csr", async function (req, res) {
   let reqState = null,
-    posts = [];
+    posts = [],
+    views = [],
+    replies = [];
 
   const inputs = {
     srchFor: req.body.srchFor || null,
@@ -44,19 +73,44 @@ router.post("/view-search-csr", async function (req, res) {
       throw new Error("Z02YAB64YABL6BA3");
 
     let r = await utilPre.retQuery(
-      `SELECT t1.post_id AS postId, t1.title, t1.name, t1.date, COUNT(t2.post_view_id) AS viewCount, COUNT(t3.post_reply_id) AS replyCount FROM post t1 LEFT JOIN post_view t2 ON t1.post_id = t2.post_id LEFT JOIN post_reply t3 ON t1.post_id = t3.post_id WHERE t1.title LIKE ? GROUP BY t1.post_id, t1.title, t1.name, t1.date`,
+      `SELECT post_id AS postId, title, name, date FROM post WHERE title LIKE ?`,
       [`${inputs.srchFor}%`],
       shared.Connect.connWrap
     );
     if (r.state) {
       posts = r.result;
     } else throw new Error("78YNAN020YABLE946Y");
+
+    const postIds = posts.map((p) => p.postId);
+    if (postIds.length > 0) {
+      r = await utilPre.retQuery(
+        `SELECT post_id AS postId, COUNT(post_view_id) AS viewCount FROM post_view WHERE post_id IN (${postIds.join(
+          ","
+        )}) GROUP BY post_id`,
+        [],
+        shared.Connect.connWrap
+      );
+      if (r.state) {
+        views = r.result;
+      } else throw new Error("44E03E96E054GE619VVE");
+
+      r = await utilPre.retQuery(
+        `SELECT post_id AS postId, COUNT(post_reply_id) AS replyCount FROM post_reply WHERE post_id IN (${postIds.join(
+          ","
+        )}) GROUP BY post_id`,
+        [],
+        shared.Connect.connWrap
+      );
+      if (r.state) {
+        replies = r.result;
+      } else throw new Error("003E448E6LPPE06E4AW");
+    }
   } catch (e) {
     console.log(e);
     reqState = e.message;
   }
 
-  res.send(JSON.stringify({ reqState, result: { posts } }));
+  res.send(JSON.stringify({ reqState, result: { posts, views, replies } }));
   res.end();
 });
 
@@ -121,7 +175,7 @@ router.post("/view-discussion-ssr", async function (req, res) {
       throw new Error("BJ46YANLIE12Y0BE");
 
     let r = await OdaiTable.read({
-      query: `SELECT t1.post_id AS postId, t1.title, t1.description, t1.name, t1.date, COUNT(t2.post_view_id) AS viewCount, COUNT(t3.post_reply_id) AS replyCount FROM post t1 LEFT JOIN post_view t2 ON t1.post_id = t2.post_id LEFT JOIN post_reply t3 ON t1.post_id = t3.post_id WHERE t1.post_id = ? GROUP BY t1.post_id, t1.title, t1.description, t1.name, t1.date`,
+      query: `SELECT post_id AS postId, title, description, name, date FROM post WHERE post_id = ?`,
       prepared: [inputs.postId],
       path: inputs.path,
       transformer: "retQueryOne",
@@ -141,6 +195,53 @@ router.post("/view-discussion-ssr", async function (req, res) {
       post.replies = [];
       throw new Error("HL46YANLE884YLANG");
     }
+  } catch (e) {
+    console.log(e);
+    reqState = e.message;
+  }
+
+  res.send(JSON.stringify({ reqState, result: { post } }));
+  res.end();
+});
+
+router.post("/view-discussion-csr", async function (req, res) {
+  let reqState = null,
+    post = {};
+
+  const inputs = {
+    postId: +req.body.postId || null,
+  };
+
+  try {
+    if (typeof inputs.postId !== "number" || inputs.postId < 1)
+      throw new Error("36E49E1EHLP79E4615E");
+
+    let r = await utilPre.noReturnQuery(
+      `INSERT INTO post_view (post_id) VALUES (?)`,
+      [inputs.postId],
+      shared.Connect.connWrap
+    );
+    if (!r.state) throw new Error("7868EE16EE784E6BB6EE");
+
+    r = await utilPre.retQuery(
+      `SELECT COUNT(post_view_id) AS viewCount FROM post_view WHERE post_id = ? GROUP BY post_id`,
+      [inputs.postId],
+      shared.Connect.connWrap
+    );
+    if (r.state) {
+      if (r.result.length > 0) post.viewCount = r.result[0].viewCount;
+      else post.viewCount = 0;
+    } else throw new Error("45EKU6LUE786E13EG");
+
+    r = await utilPre.retQuery(
+      `SELECT COUNT(post_reply_id) AS replyCount FROM post_reply WHERE post_id = ? GROUP BY post_id`,
+      [inputs.postId],
+      shared.Connect.connWrap
+    );
+    if (r.state) {
+      if (r.result.length > 0) post.replyCount = r.result[0].replyCount;
+      else post.replyCount = 0;
+    } else throw new Error("77E03E94A64GGNLE99");
   } catch (e) {
     console.log(e);
     reqState = e.message;
@@ -194,6 +295,7 @@ router.post("/create-reply", async function (req, res) {
         postId: inputs.postId,
         reply: inputs.reply,
         name: inputs.name,
+        date: new Date(),
       };
     } else throw new Error("745YIAL3656YKANECEG");
   } catch (e) {

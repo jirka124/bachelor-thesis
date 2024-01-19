@@ -25,7 +25,7 @@ export default defineComponent({
         if (r.reqState !== null) console.log(r.reqState);
 
         if (r.result.hasOwnProperty("posts"))
-          this.guestStore.setSearchedPosts(r.result.posts);
+          this.guestStore.setSearchedPosts(r.result.posts, r.result.views, r.result.replies);
       } catch (error) {
         console.error(error);
       }

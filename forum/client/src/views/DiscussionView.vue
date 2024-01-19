@@ -25,7 +25,7 @@ export default defineComponent({
     }
   },
   methods: {
-    async fetchViewedPost() {
+    async fetchViewedPostSSR() {
       // fetch post details
       const postId = this.$route.params.postId || null;
       if (postId === null) return;
@@ -40,6 +40,23 @@ export default defineComponent({
 
         if (r.result.hasOwnProperty("post"))
           this.guestStore.setViewedPost(r.result.post);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchViewedPostCSR() {
+      const postId = this.$route.params.postId || null;
+      if (postId === null) return;
+
+      const reqBody = { postId };
+
+      let r;
+      try {
+        r = (await api.post("general/view-discussion-csr", reqBody)).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("post"))
+          this.guestStore.alterViewedPost(r.result.post);
       } catch (error) {
         console.error(error);
       }
@@ -72,7 +89,8 @@ export default defineComponent({
     }
   },
   async mounted() {
-    this.fetchViewedPost();
+    this.fetchViewedPostSSR();
+    this.fetchViewedPostCSR();
   },
 });
 </script>
@@ -88,7 +106,7 @@ export default defineComponent({
       {{ post ? post.description : "ERROR" }}
     </p>
     <div id="discuss-echos">
-      <p>{{ post ? post.viewsCount || 0 : 0 }} views</p>
+      <p>{{ post ? post.viewCount || 0 : 0 }} views</p>
       <p>{{ post ? post.replyCount || 0 : 0 }} replies</p>
     </div>
     <p id="discuss-reply-title">Do you want to reply?</p>
