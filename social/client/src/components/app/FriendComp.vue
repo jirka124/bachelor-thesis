@@ -1,22 +1,44 @@
 <script>
 import { defineComponent } from "vue";
+import UserAvatar from "@/components/app/UserAvatar.vue";
 
 export default defineComponent({
   name: "FriendComp",
+  components: { UserAvatar },
+  props: {
+    friend: {
+      type: Object,
+      default() {
+        return null;
+      }
+    }
+  },
+  computed: {
+    userId() {
+      return this.friend && this.friend.userId ? this.friend.userId : 0;
+    },
+    avatarId() {
+      return this.friend && this.friend.avatar ? this.friend.avatar : 1;
+    },
+    userName() {
+      return this.friend && this.friend.login ? this.friend.login : "NONAME";
+    }
+  },
+  methods: {
+    goToFriendProfile(userId) {
+      this.$router.push({ name: "view-user", params: { userId } })
+    },
+  }
 });
 </script>
 
 <template>
   <div class="user-friend">
     <div class="user-friend-meta">
-      <picture class="user-friend-meta-pic">
-        <source type="image/webp" srcset="@/assets/user-avatar-man.webp" />
-        <source type="image/jpeg" srcset="@/assets/user-avatar-man.jpg" />
-        <img src="@/assets/user-avatar-man.jpg" alt="user avatar" loading="lazy" />
-      </picture>
-      <p class="user-friend-meta-user">Tuliana Jackes</p>
+      <UserAvatar class="user-friend-meta-pic" :userId="userId" :avatarId="avatarId" />
+      <p class="user-friend-meta-user">{{ userName }}</p>
     </div>
-    <button class="btn-1">view</button>
+    <button @click="goToFriendProfile(userId)" class="btn-1">view</button>
   </div>
 </template>
 

@@ -1,29 +1,49 @@
 <script>
 import { defineComponent } from "vue";
+import UserAvatar from "@/components/app/UserAvatar.vue";
 
 export default defineComponent({
   name: "PostCmnt",
+  components: { UserAvatar },
+  props: {
+    comment: {
+      type: Object,
+      default() {
+        return null;
+      }
+    }
+  },
+  computed: {
+    userId() {
+      return this.comment && this.comment.userId ? this.comment.userId : 0;
+    },
+    avatarId() {
+      return this.comment && this.comment.avatar ? this.comment.avatar : 1;
+    },
+    userName() {
+      return this.comment && this.comment.login ? this.comment.login : "NONAME";
+    },
+    date() {
+      return this.comment && this.comment.date ? new Date(this.comment.date).toLocaleDateString() : "NODATE";
+    },
+    content() {
+      return this.comment && this.comment.content ? this.comment.content : "NOCONTENT";
+    },
+  }
 });
 </script>
 
 <template>
   <div class="post-cmnt">
     <div class="post-cmnt-meta">
-      <picture class="post-cmnt-meta-pic">
-        <source type="image/webp" srcset="@/assets/user-avatar-man.webp" />
-        <source type="image/jpeg" srcset="@/assets/user-avatar-man.jpg" />
-        <img src="@/assets/user-avatar-man.jpg" alt="user avatar" loading="lazy" />
-      </picture>
-      <p class="post-cmnt-meta-user">Tuliana Jackes</p>
+      <UserAvatar class="post-cmnt-meta-pic" :userId="userId" :avatarId="avatarId" />
+      <p class="post-cmnt-meta-user">{{ userName }}</p>
       <div class="post-cmnt-meta-date">
         <i class="fa-regular fa-calendar"></i>
-        <p>21.05.2025</p>
+        <p>{{ date }}</p>
       </div>
     </div>
-    <div class="post-cmnt-cont">🌟 Just had the most inspiring conversation on SoConnect! 💬 We discussed our shared love
-      for
-      travel and exchanged tips on hidden gems. It's amazing how this platform connects us with like-minded people from
-      all around the world. Where's your dream destination? 🌍 #TravelDreams #SoConnectCommunity</div>
+    <div class="post-cmnt-cont">{{ content }}</div>
   </div>
 </template>
 

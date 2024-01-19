@@ -5,15 +5,35 @@ import PostComp from "@/components/app/PostComp.vue";
 export default defineComponent({
   name: "CreatePostView",
   components: { PostComp },
+  data() {
+    return {
+      contentVal: ""
+    }
+  },
+  methods: {
+    goToFeed() {
+      this.$router.push({ name: "feed" })
+    },
+    async createPost() {
+      let r;
+      try {
+        r = (await this.$api.post("user/create-post", { contentVal: this.contentVal })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else this.goToFeed();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
 });
 </script>
 
 <template>
   <div id="create-post">
-    <PostComp />
+    <PostComp :readonly="false" v-model:modelValue="contentVal" />
     <div id="create-post-act">
-      <button class="btn-1">POST</button>
-      <button class="btn-1">cancel</button>
+      <button @click="createPost" class="btn-1">POST</button>
+      <button @click="goToFeed" class="btn-1">cancel</button>
     </div>
   </div>
 </template>

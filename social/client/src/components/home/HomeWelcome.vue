@@ -3,6 +3,11 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "HomeWelcome",
+  methods: {
+    goToLogin() {
+      this.$router.push({ name: "login" });
+    },
+  }
 });
 </script>
 
@@ -35,7 +40,7 @@ export default defineComponent({
           </div>
         </div>
       </div>
-      <p id="welcome-call">And that's just a beggining, <span>so connect</span>, stop hesitate.</p>
+      <p id="welcome-call">And that's just a beggining, <span @click="goToLogin">so connect</span>, stop hesitate.</p>
     </div>
   </div>
 </template>

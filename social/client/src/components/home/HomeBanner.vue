@@ -7,6 +7,14 @@ export default defineComponent({
     return {
       menuToggleOn: false
     }
+  },
+  methods: {
+    goToLogin() {
+      this.$router.push({ name: "login" });
+    },
+    goToSignup() {
+      this.$router.push({ name: "signup" });
+    },
   }
 });
 </script>
@@ -23,17 +31,17 @@ export default defineComponent({
     <div v-show="menuToggleOn" id="banner-mobile-menu">
       <div class="banner-mobile-menu-item">
         <div><i class="fa-solid fa-link"></i></div>
-        <p>LOGIN</p>
+        <p @click="goToLogin">LOGIN</p>
       </div>
       <div class="banner-mobile-menu-item">
         <div><i class="fa-solid fa-link"></i></div>
-        <p>SIGNUP</p>
+        <p @click="goToSignup">SIGNUP</p>
       </div>
     </div>
     <div id="banner-masking"></div>
     <div id="banner-cont">
       <div id="banner-cont-sloga">Where Conversations Thrive, Connections Flourish</div>
-      <button id="banner-cont-act" class="btn-1">Enter</button>
+      <button @click="goToLogin" id="banner-cont-act" class="btn-1">Enter</button>
     </div>
     <header>
       <div id="header-left">
@@ -43,8 +51,8 @@ export default defineComponent({
           <img src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
         </picture>
         <h1 id="header-comp">SoConnect</h1>
-        <p id="header-log">Login</p>
-        <p id="header-sig">Signup</p>
+        <p @click="goToLogin" id="header-log">Login</p>
+        <p @click="goToSignup" id="header-sig">Signup</p>
       </div>
       <div id="header-right"><i @click="menuToggleOn = !menuToggleOn" class="fa-solid fa-bars"></i></div>
     </header>

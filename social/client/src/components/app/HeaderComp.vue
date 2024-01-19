@@ -1,15 +1,30 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/user";
+import UserAvatar from "@/components/app/UserAvatar.vue";
 
 export default defineComponent({
   name: "HeaderComp",
+  components: { UserAvatar },
+  computed: {
+    ...mapStores(useUserStore),
+    username() {
+      return this.userStore.userName !== null ? this.userStore.userName : "guest"
+    }
+  },
+  methods: {
+    goToHome() {
+      this.$router.push({ name: "home" });
+    }
+  }
 });
 </script>
 
 <template>
   <header>
     <div id="header-l">
-      <picture id="header-l-pic">
+      <picture @click="goToHome" id="header-l-pic">
         <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" />
         <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" />
         <img src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
@@ -19,12 +34,8 @@ export default defineComponent({
       </button>
     </div>
     <div id="header-r">
-      <p id="header-r-user">Username78</p>
-      <picture id="header-r-pic">
-        <source type="image/webp" srcset="@/assets/user-avatar-man.webp" />
-        <source type="image/jpeg" srcset="@/assets/user-avatar-man.jpg" />
-        <img src="@/assets/user-avatar-man.jpg" alt="logged user avatar" loading="lazy" />
-      </picture>
+      <p id="header-r-user">{{ username }}</p>
+      <UserAvatar id="header-r-pic" :userId="userStore.userId" :avatarId="userStore.userAvatar" />
     </div>
   </header>
 </template>
@@ -52,6 +63,7 @@ header {
 
 #header-l-pic {
   width: 50px;
+  cursor: pointer;
 }
 
 #header-l-pic>img {

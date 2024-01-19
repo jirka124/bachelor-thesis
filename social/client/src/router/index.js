@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { api } from '@/boot/axios.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,11 +19,6 @@ const router = createRouter({
           name: 'feed',
           alias: '',
           component: () => import('../views/FeedView.vue')
-        },
-        {
-          path: 'v-post/:postId',
-          name: 'view-post',
-          component: () => import('../views/ViewPostView.vue')
         },
         {
           path: 'c-post',
@@ -46,6 +43,20 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+router.beforeEach(async (to) => {
+  const userStore = useUserStore()
+  const isAppPath = to.matched.some((match) => match.path === '/app')
+  if (isAppPath) {
+    let r = (await api.post('user/is-logged')).data
+    if (r.reqState !== null) console.log(r.reqState)
+
+    if (r.result.hasOwnProperty('isLogged')) userStore.setIsLogged(r.result.isLogged)
+
+    if (userStore.isLogged && (to.name === 'login' || to.name === 'signup')) return { name: 'feed' }
+    if (!userStore.isLogged && to.name === 'create-post') return { name: 'login' }
+  }
 })
 
 export default router

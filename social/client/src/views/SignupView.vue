@@ -1,8 +1,42 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/user";
 
 export default defineComponent({
   name: "SignuView",
+  data() {
+    return {
+      loginVal: "root",
+      passwordVal: "root123",
+      passwordAgVal: "root123"
+    }
+  },
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  methods: {
+    goToLogin() {
+      this.$router.push({ name: "login" });
+    },
+    async signup() {
+      if (this.passwordVal !== this.passwordVal) return alert("Passwords must match!");
+
+      let r;
+      try {
+        r = (
+          await this.$api.post("user/signup", {
+            name: this.loginVal,
+            pass: this.passwordVal,
+          })
+        ).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
 });
 </script>
 
@@ -18,12 +52,12 @@ export default defineComponent({
     <div id="signup-form">
       <h1 id="signup-form-title">Signup</h1>
       <div id="signup-form-ins">
-        <input type="text" placeholder="Login" class="in">
-        <input type="text" placeholder="Password" class="in">
-        <input type="text" placeholder="Password" class="in">
+        <input v-model="loginVal" minlength="1" maxlength="32" type="text" placeholder="Login" class="in">
+        <input v-model="passwordVal" minlength="1" type="password" placeholder="Password" class="in">
+        <input v-model="passwordAgVal" minlength="1" type="password" placeholder="Password" class="in">
       </div>
-      <button class="btn-1">SIGNUP</button>
-      <button class="btn-2">Already a member? Login</button>
+      <button @click="signup" class="btn-1">SIGNUP</button>
+      <button @click="goToLogin" class="btn-2">Already a member? Login</button>
     </div>
   </div>
 </template>

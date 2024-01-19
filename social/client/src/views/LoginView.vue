@@ -1,8 +1,39 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/user";
 
 export default defineComponent({
   name: "LoginView",
+  data() {
+    return {
+      loginVal: "root",
+      passwordVal: "root123",
+    }
+  },
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  methods: {
+    goToSignup() {
+      this.$router.push({ name: "signup" });
+    },
+    async login() {
+      let r;
+      try {
+        r = (
+          await this.$api.post("user/login", {
+            name: this.loginVal,
+            pass: this.passwordVal,
+          })
+        ).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
 });
 </script>
 
@@ -18,11 +49,11 @@ export default defineComponent({
     <div id="login-form">
       <h1 id="login-form-title">LOGIN</h1>
       <div id="login-form-ins">
-        <input type="text" placeholder="Login" class="in">
-        <input type="text" placeholder="Password" class="in">
+        <input v-model="loginVal" type="text" placeholder="Login" class="in">
+        <input v-model="passwordVal" type="password" placeholder="Password" class="in">
       </div>
-      <button class="btn-1">LOGIN</button>
-      <button class="btn-2">Not a member? Signup</button>
+      <button @click="login" class="btn-1">LOGIN</button>
+      <button @click="goToSignup" class="btn-2">Not a member? Signup</button>
     </div>
   </div>
 </template>

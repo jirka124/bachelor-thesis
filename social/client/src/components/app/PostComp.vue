@@ -1,17 +1,71 @@
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/user";
 import PostCmnt from "@/components/app/PostCmnt.vue";
+import UserAvatar from "@/components/app/UserAvatar.vue";
 
 export default defineComponent({
   name: "PostComp",
-  components: { PostCmnt },
+  components: { PostCmnt, UserAvatar },
+  emits: ["update:modelValue"],
+  props: {
+    readonly: {
+      type: Boolean,
+      default: true
+    },
+    post: {
+      type: Object,
+      default() {
+        return null;
+      }
+    },
+    modelValue: {}
+  },
   data() {
     return {
-      commentToggleOn: false
+      commentToggleOn: false,
+      commentVal: ""
+    }
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    userId() {
+      if (this.readonly) return this.post && this.post.userId ? this.post.userId : 0;
+      return this.userStore.userId ? this.userStore.userId : 0;
+    },
+    avatarId() {
+      if (this.readonly) return this.post && this.post.avatar ? this.post.avatar : 1;
+      return this.userStore.userAvatar ? this.userStore.userAvatar : 1;
+    },
+    userName() {
+      if (this.readonly) return this.post && this.post.login ? this.post.login : "NONAME";
+      return this.userStore.userName ? this.userStore.userName : "NONAME";
+    },
+    postDate() {
+      if (this.readonly) return this.post && this.post.createDate ? new Date(this.post.createDate).toLocaleDateString() : "NODATE";
+      return new Date().toLocaleDateString();
+    },
+    postContent() {
+      if (this.readonly) return this.post && this.post.content ? this.post.content : "NOCONTENT";
+      return this.modelValue;
+    },
+    likeCount() {
+      if (this.readonly) return this.post ? this.post.likeCount || 0 : 0;
+      return 0;
+    },
+    replyCount() {
+      if (this.readonly) return this.post ? this.post.replyCount || 0 : 0;
+      return 0;
+    },
+    postComments() {
+      if (this.readonly) return this.post && this.post.comments ? this.post.comments : [];
+      return [];
     }
   },
   watch: {
     commentToggleOn(newVal) {
+      if (this.readonly) return;
       if (newVal) setTimeout(() => this.autosizeTextAreaComment(), 0);
     }
   },
@@ -33,7 +87,72 @@ export default defineComponent({
       textElm.style.height = "0";
       const scrollHeight = textElm.scrollHeight;
       textElm.style.height = `${scrollHeight}px`;
-    }
+    },
+    likeToggle() {
+      if (!this.readonly) return;
+      this.post.hasLiked ? this.unlikePost() : this.likePost();
+    },
+    commentToggle() {
+      if (!this.readonly) return;
+      this.commentToggleOn = !this.commentToggleOn;
+      this.fetchComments();
+    },
+    postInput(e) {
+      this.$emit("update:modelValue", e.target.value);
+    },
+    async likePost() {
+      let r;
+      try {
+        r = (await this.$api.post("user/like-post", { postId: this.post.postId })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("likeObj")) {
+          this.userStore.setLikeOnPost(r.result.likeObj, this.$route);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async unlikePost() {
+      let r;
+      try {
+        r = (await this.$api.post("user/unlike-post", { postId: this.post.postId })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("likeObj")) {
+          this.userStore.setLikeOnPost(r.result.likeObj, this.$route);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchComments() {
+      let r;
+      try {
+        r = (await this.$api.post("user/fetch-post-comments", { postId: this.post.postId })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+
+        if (r.result.hasOwnProperty("commentObj")) {
+          this.userStore.setPostComments(r.result.commentObj, this.$route);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async createPostComment() {
+      let r;
+      try {
+        r = (await this.$api.post("user/create-post-comment", { postId: this.post.postId, commentVal: this.commentVal })).data;
+        if (r.reqState !== null) console.log(r.reqState);
+        else this.commentVal = "";
+
+        if (r.result.hasOwnProperty("commentObj")) {
+          this.userStore.addPostComment(r.result.commentObj, this.$route);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   updated() {
     this.initTextAreas();
@@ -52,33 +171,30 @@ export default defineComponent({
   <div class="post-comp">
     <div class="post-box">
       <div class="post-meta">
-        <picture class="post-meta-pic">
-          <source type="image/webp" srcset="@/assets/user-avatar-man.webp" />
-          <source type="image/jpeg" srcset="@/assets/user-avatar-man.jpg" />
-          <img src="@/assets/user-avatar-man.jpg" alt="user avatar" loading="lazy" />
-        </picture>
-        <p class="post-meta-user">Tuliana Jackes</p>
+        <UserAvatar class="post-meta-pic" :userId="userId" :avatarId="avatarId" />
+        <p class="post-meta-user">{{ userName }}</p>
         <div class="post-meta-date">
           <i class="fa-regular fa-calendar"></i>
-          <p>21.05.2025</p>
+          <p>{{ postDate }}</p>
         </div>
       </div>
-      <textarea class="post-cont" ref="post-text" @keyup="autosizeTextAreaPost"
-        @keypress="autosizeTextAreaPost">🌟 Just had the most inspiring conversation on SoConnect! 💬 We discussed our shared love for travel and exchanged tips on hidden gems. It's amazing how this platform connects us with like-minded people from all around the world. Where's your dream destination? 🌍 #TravelDreams #SoConnectCommunity</textarea>
+      <textarea class="post-cont" ref="post-text" @keyup="autosizeTextAreaPost" @keypress="autosizeTextAreaPost"
+        @input="postInput" v-text="postContent" :readonly="readonly" placeholder="Type a post..."></textarea>
       <div class="post-act">
-        <button class="btn-1">196 <i class="fa-regular fa-thumbs-up"></i></button>
-        <button @click="commentToggleOn = !commentToggleOn" class="btn-1">265 <i
-            class="fa-regular fa-comment"></i></button>
+        <button @click="likeToggle" class="btn-1">{{ likeCount }} <i
+            :class="{ 'fa-regular': !readonly || !post || !post.hasLiked, 'fa-solid': readonly && post && post.hasLiked }"
+            class="fa-thumbs-up"></i></button>
+        <button @click="commentToggle" class="btn-1">{{ replyCount }} <i class="fa-regular fa-comment"></i></button>
       </div>
     </div>
     <div v-if="commentToggleOn" class="post-extra">
       <div class="post-extra-comment">
-        <textarea ref="comment-text" @keyup="autosizeTextAreaComment"
-          @keypress="autosizeTextAreaComment">Well, thanks everyone for the great support recieved from y'all. Will keep on doing such content! But this time its the very new post.</textarea>
-        <button><i class="fa-regular fa-paper-plane"></i></button>
+        <textarea ref="comment-text" @keyup="autosizeTextAreaComment" @keypress="autosizeTextAreaComment"
+          v-model="commentVal" placeholder="Type a comment..."></textarea>
+        <button @click="createPostComment"><i class="fa-regular fa-paper-plane"></i></button>
       </div>
       <div class="post-extra-comments">
-        <PostCmnt v-for="i in [1, 2, 3]" :key="i" />
+        <PostCmnt v-for="comment in postComments" :key="comment.postCommentId" :comment="comment" />
       </div>
     </div>
   </div>
@@ -111,10 +227,6 @@ export default defineComponent({
 
 .post-meta-pic {
   width: 40px;
-}
-
-.post-meta-pic>img {
-  display: block;
 }
 
 .post-meta-user {
