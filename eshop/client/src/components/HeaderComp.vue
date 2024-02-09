@@ -64,26 +64,18 @@ export default defineComponent({
 <template>
   <header :style="headerDynamicStyle">
     <div id="header-identity">
-      <button
-        id="header-menu-toggle"
-        v-show="isUnder720"
-        @click="this.isMenuOn = !this.isMenuOn"
-      >
-        <i v-show="!this.isMenuOn" class="fa-solid fa-bars"></i>
-        <i v-show="this.isMenuOn" class="fa-solid fa-xmark"></i>
+      <button id="header-menu-toggle" v-show="isUnder720" @click="isMenuOn = !isMenuOn">
+        <i v-show="!isMenuOn" class="fa-solid fa-bars"></i>
+        <i v-show="isMenuOn" class="fa-solid fa-xmark"></i>
       </button>
 
-      <RouterLink to="/"
-        ><picture>
+      <RouterLink to="/">
+        <picture>
           <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" />
           <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" />
-          <img
-            id="header-identity-icon"
-            src="@/assets/identity/icon/icon-64.png"
-            alt="company icon"
-            loading="lazy"
-          /> </picture
-      ></RouterLink>
+          <img id="header-identity-icon" src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
+        </picture>
+      </RouterLink>
       <b>Plant Levitate</b>
     </div>
     <nav v-show="isMenuVisible">
@@ -123,11 +115,13 @@ header {
   padding: 8px;
   transition: all 0.3s;
 }
+
 #header-identity {
   display: flex;
   align-items: center;
   column-gap: 8px;
 }
+
 #header-menu-toggle {
   display: flex;
   align-items: center;
@@ -138,32 +132,39 @@ header {
   background-color: transparent;
   border: none;
 }
-#header-menu-toggle > i {
+
+#header-menu-toggle>i {
   font-size: 20px;
   color: #757575;
 }
+
 #header-identity-icon {
   width: 40px;
 }
-#header-identity > b {
+
+#header-identity>b {
   font-size: 24px;
 }
-nav > a {
+
+nav>a {
   font-size: 18px;
   text-decoration: none;
   padding: 8px;
   transition: all 0.3s;
   color: #757575;
 }
-nav > a.router-link-exact-active {
+
+nav>a.router-link-exact-active {
   font-size: 22px;
   text-decoration: underline;
 }
+
 #header-interact {
   position: relative;
   display: flex;
   align-items: center;
 }
+
 #header-interact-srch {
   position: absolute;
   bottom: 0;
@@ -175,33 +176,39 @@ nav > a.router-link-exact-active {
   box-shadow: 0 2px 4px rgba(100, 100, 100, 0.498);
   transform: translateY(150%);
 }
-#header-interact-srch > input,
-#header-interact-srch > button {
+
+#header-interact-srch>input,
+#header-interact-srch>button {
   background-color: transparent;
   border: none;
   outline: none;
   height: 32px;
 }
-#header-interact-srch > input {
+
+#header-interact-srch>input {
   padding-left: 6px;
 }
-#header-interact-srch > button {
+
+#header-interact-srch>button {
   width: 32px;
   height: 32px;
   cursor: pointer;
 }
-#header-interact-srch > button > i {
+
+#header-interact-srch>button>i {
   color: #757575;
 }
-#header-interact > p {
-}
-#header-interact > button {
+
+#header-interact>p {}
+
+#header-interact>button {
   padding: 4px 8px;
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
-#header-interact > button > i {
+
+#header-interact>button>i {
   font-size: 20px;
   color: #757575;
 }
@@ -222,8 +229,9 @@ nav > a.router-link-exact-active {
     background-color: #ebfdec;
   }
 }
+
 @media only screen and (max-width: 350px) {
-  #header-identity > b {
+  #header-identity>b {
     display: none;
   }
 }

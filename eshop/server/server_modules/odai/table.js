@@ -738,9 +738,12 @@ class OdaiTable {
       if (reinvObj.toAddIds.length > 0) {
         const valueArr = reinvObj.toAddIds.map((toAddId) => {
           return `(${reinvId}, ${tableKeys
-            .map((tableKey) =>
-              toAddId[tableKey] === null ? 0 : toAddId[tableKey]
-            )
+            .map((tableKey) => {
+              if (toAddId[tableKey] === null) return 0;
+              else if (typeof toAddId[tableKey] === "string")
+                return `"${toAddId[tableKey]}"`;
+              return toAddId[tableKey];
+            })
             .join(",")})`;
         });
 
@@ -779,10 +782,22 @@ class OdaiTable {
     @param options, object with config of operation:
   */
   static async read(options) {
-    if (!options.path)
-      throw new Error(
-        "ERROR: ODAI read operation cannot be run without path parameter"
+    if (!options.path) {
+      // fired by client, simply execute and return result
+      let r = await utilPre.retQuery(
+        options.query,
+        options.prepared,
+        shared.Connect.connWrap
       );
+      if (!r.state) return { state: false, result: r.result };
+
+      const result = { state: true, result: r.result };
+      if (options.transformer)
+        QueryResultTransform[options.transformer](result, r.result);
+      return result;
+    }
+
+    // continue with ODAI actions (this is SSR and should be processed)
 
     let fullAst = this.parser.astify(options.query);
 
