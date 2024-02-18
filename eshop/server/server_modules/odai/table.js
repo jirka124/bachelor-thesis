@@ -291,8 +291,8 @@ class OdaiTable {
 
     // delete duplicit paths
     forceReinvPaths = [...new Set(forceReinvPaths)];
-    console.log("REINVALIDATE FOLLOWING PATHS: ");
-    console.log(forceReinvPaths);
+
+    Odai.reinvalidatePaths(forceReinvPaths);
   }
 
   static async onDeleteEvent(e) {
@@ -367,8 +367,8 @@ class OdaiTable {
 
     // delete duplicit paths
     forceReinvPaths = [...new Set(forceReinvPaths)];
-    console.log("REINVALIDATE FOLLOWING PATHS: ");
-    console.log(forceReinvPaths);
+
+    Odai.reinvalidatePaths(forceReinvPaths);
   }
 
   static async onUpdateEvent(e) {
@@ -519,13 +519,15 @@ class OdaiTable {
     unionPrepares = unionPrepares.flat();
 
     let forceByQuery = [];
-    m = await utilPre.retQuery(
-      unionQueries,
-      unionPrepares,
-      shared.Connect2.connWrap
-    );
-    if (m.state) forceByQuery = m.result;
-    else throw new Error(m.result);
+    if (unionQueries !== "") {
+      m = await utilPre.retQuery(
+        unionQueries,
+        unionPrepares,
+        shared.Connect2.connWrap
+      );
+      if (m.state) forceByQuery = m.result;
+      else throw new Error(m.result);
+    }
 
     const forceReinv = [
       ...forceWithoutQuery,
@@ -537,6 +539,8 @@ class OdaiTable {
 
     // delete duplicit paths
     forceReinvPaths = [...new Set(forceReinvPaths)];
+
+    Odai.reinvalidatePaths(forceReinvPaths);
   }
 
   /*

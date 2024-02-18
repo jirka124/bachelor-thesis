@@ -1,3 +1,4 @@
+const axios = require("axios");
 const { utilDef, utilPre } = require("../primaryQueries");
 const shared = require("../shared");
 /*
@@ -40,6 +41,14 @@ class Odai {
     await this.initDatabase();
     // create reinvalidatin tables for each table present in OdaiTables
     await this.initUsedTables();
+
+    // register termination signal handler
+    process.on("message", async (msg) => {
+      if (msg == "shutdown") {
+        await this.reinvalidateAll();
+        process.exit(0);
+      }
+    });
   }
 
   static async initDatabase() {
@@ -133,6 +142,16 @@ class Odai {
       );
       if (!r.state) throw new Error(r.result);
     });
+  }
+
+  // function for reinvalidation on SSR API
+  static reinvalidatePaths(paths) {
+    // TODO:
+  }
+
+  // function for full reinvalidation on SSR API
+  static async reinvalidateAll() {
+    // TODO:
   }
 }
 
