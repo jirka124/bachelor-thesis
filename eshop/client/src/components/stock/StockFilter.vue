@@ -36,8 +36,11 @@ export default defineComponent({
     },
   },
   watch: {
+    currentSrchVal(newVal) {
+      if (this.searchVal !== newVal) this.searchVal = newVal;
+    },
     searchVal(newVal) {
-      this.$emit("changeSrchVal", newVal);
+      if (this.currentSrchVal !== newVal) this.$emit("changeSrchVal", newVal);
     },
     sortVal(newVal) {
       this.$emit("changeSortType", newVal);
@@ -83,37 +86,43 @@ export default defineComponent({
   width: 100%;
   padding: 2vh 0;
 }
+
 #filter-srch {
   display: flex;
   max-width: 300px;
   border-bottom: 2px solid #757575;
   background-color: white;
 }
-#filter-srch > input,
-#filter-srch > button {
+
+#filter-srch>input,
+#filter-srch>button {
   background-color: transparent;
   border: none;
   outline: none;
   height: 32px;
 }
-#filter-srch > input {
+
+#filter-srch>input {
   display: block;
   padding-left: 6px;
   width: calc(100% - 32px);
 }
-#filter-srch > button {
+
+#filter-srch>button {
   width: 32px;
   height: 32px;
   cursor: pointer;
 }
-#filter-srch > button > i {
+
+#filter-srch>button>i {
   color: #757575;
 }
-#filter-sort {
-}
-#filter-sort > b {
-}
-#filter-sort > button {
+
+#filter-sort {}
+
+#filter-sort>b {}
+
+#filter-sort>button {
   background-color: transparent;
   width: 30px;
   height: 30px;
@@ -121,10 +130,12 @@ export default defineComponent({
   outline: none;
   cursor: pointer;
 }
-#filter-sort > button > i {
+
+#filter-sort>button>i {
   font-size: 18px;
   color: #757575;
 }
+
 #filter-sort-bar {
   position: absolute;
   bottom: 0;
@@ -139,7 +150,8 @@ export default defineComponent({
   box-shadow: 0px 2px 4px 0px rgba(100, 100, 100, 0.498);
   transform: translateY(90%);
 }
-#filter-sort-bar > button {
+
+#filter-sort-bar>button {
   text-align: left;
   color: #979797;
   background-color: transparent;
@@ -148,7 +160,8 @@ export default defineComponent({
   cursor: pointer;
   transition: all 0.2s;
 }
-#filter-sort-bar > button:hover {
+
+#filter-sort-bar>button:hover {
   color: black;
 }
 
@@ -157,12 +170,13 @@ export default defineComponent({
     width: 100%;
     max-width: none;
   }
+
   #filter-sort {
     width: 100%;
   }
+
   #filter-sort-bar {
     width: 100%;
     min-width: none;
   }
-}
-</style>
+}</style>

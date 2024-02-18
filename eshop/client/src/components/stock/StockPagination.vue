@@ -6,10 +6,16 @@ import { useAppStore } from "@/stores/app";
 export default defineComponent({
   name: "StockPagination",
   emits: ["changePagination"],
+  props: {
+    currentPageVal: {
+      type: Number,
+      default: 1,
+    },
+  },
   data() {
     return {
       pageSize: 20,
-      pageVal: 1,
+      pageVal: this.currentPageVal,
     };
   },
   computed: {
@@ -19,8 +25,11 @@ export default defineComponent({
     },
   },
   watch: {
+    currentPageVal(newVal) {
+      if (this.pageVal !== newVal) this.pageVal = newVal;
+    },
     pageVal(newVal) {
-      this.$emit("changePagination", newVal);
+      if (this.currentPageVal !== newVal) this.$emit("changePagination", newVal);
     },
   },
   methods: {
@@ -42,7 +51,7 @@ export default defineComponent({
     <hr />
     <button @click="pageBack(1)"><i class="fa-solid fa-angle-left"></i></button>
     <hr />
-    <div>PAGE {{ pageVal }} OF {{ maxPageCount }}</div>
+    <div>PAGE {{ pageVal || 1 }} OF {{ maxPageCount }}</div>
     <hr />
     <button @click="pageFront(1)"><i class="fa-solid fa-angle-right"></i></button>
     <hr />
@@ -61,7 +70,8 @@ export default defineComponent({
   border-radius: 16px;
   overflow: hidden;
 }
-#stock-pagination > button {
+
+#stock-pagination>button {
   width: 40px;
   height: 40px;
   background-color: transparent;
@@ -70,16 +80,19 @@ export default defineComponent({
   cursor: pointer;
   transition: all 0.2s;
 }
-#stock-pagination > button:hover {
+
+#stock-pagination>button:hover {
   color: #bdbdbd;
   background-color: #757575;
 }
-#stock-pagination > hr {
+
+#stock-pagination>hr {
   width: 1px;
   height: 40px;
   background-color: #757575;
 }
-#stock-pagination > div {
+
+#stock-pagination>div {
   padding: 0 16px;
 }
 </style>

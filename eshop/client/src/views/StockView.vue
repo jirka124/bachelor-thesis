@@ -11,24 +11,24 @@ export default defineComponent({
   components: { StockFilter, StockProducts, StockPagination },
   data() {
     return {
-      currentSrchVal: this.$route.query.srchFor || "",
+      currentSrchVal: null,
       currentSortVal: this.$route.query.sortType || "feat",
-      currentPageVal: this.$route.query.pagination || 1,
+      currentPageVal: null,
       fetchOptimizerInst: null,
     };
   },
   watch: {
-    currentSrchVal(newVal) {
+    currentSrchVal(newVal, oldVal) {
       this.changeQueryParam("srchFor", newVal);
-      this.fetchOnPageProducts();
+      if (oldVal !== null) this.fetchOnPageProducts();
     },
-    currentSortVal(newVal) {
+    currentSortVal(newVal, oldVal) {
       this.changeQueryParam("sortType", newVal);
-      this.fetchOnPageProducts();
+      if (oldVal !== null) this.fetchOnPageProducts();
     },
-    currentPageVal(newVal) {
+    currentPageVal(newVal, oldVal) {
       this.changeQueryParam("pagination", newVal);
-      this.fetchOnPageProducts();
+      if (oldVal !== null) this.fetchOnPageProducts();
     },
   },
   methods: {
@@ -73,6 +73,9 @@ export default defineComponent({
     },
   },
   async mounted() {
+    this.currentSrchVal = this.$route.query.srchFor || "";
+    this.currentPageVal = parseInt(this.$route.query.pagination) || 1;
+
     await this.fetchOnPageProducts();
   },
 });
@@ -81,17 +84,10 @@ export default defineComponent({
 <template>
   <div id="stock">
     <h1>Our stock</h1>
-    <StockFilter
-      :currentSrchVal="currentSrchVal"
-      :currentSortVal="currentSortVal"
-      @changeSrchVal="srchValChanged"
-      @changeSortType="sortTypeChanged"
-    />
+    <StockFilter :currentSrchVal="currentSrchVal" :currentSortVal="currentSortVal" @changeSrchVal="srchValChanged"
+      @changeSortType="sortTypeChanged" />
     <StockProducts />
-    <StockPagination
-      :currentPageVal="currentPageVal"
-      @changePagination="paginationChanged"
-    />
+    <StockPagination :currentPageVal="currentPageVal" @changePagination="paginationChanged" />
   </div>
 </template>
 
@@ -103,7 +99,8 @@ export default defineComponent({
   padding: 80px 2vw 20px 2vw;
   min-height: 100vh;
 }
-#stock > h1 {
+
+#stock>h1 {
   font-size: 24px;
   text-align: center;
 }
