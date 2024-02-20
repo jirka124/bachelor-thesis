@@ -145,12 +145,26 @@ class Odai {
 
   // function for reinvalidation on SSR API
   static reinvalidatePaths(paths) {
-    // TODO:
+    axios
+      .post(process.env.VUE_APP_ON_DEMAND_REINV_API, {
+        secret: process.env.VUE_APP_ON_DEMAND_SECRET,
+        paths,
+      })
+      .catch(function (e) {
+        console.log(e);
+      });
   }
 
   // function for full reinvalidation on SSR API
   static async reinvalidateAll() {
-    // TODO:
+    await axios
+      .post(process.env.VUE_APP_ON_DEMAND_REINV_API, {
+        secret: process.env.VUE_APP_ON_DEMAND_SECRET,
+        paths: "REINV_ALL",
+      })
+      .catch(function (e) {
+        console.log(e);
+      });
   }
 }
 
