@@ -448,6 +448,47 @@ router.post("/create-post", async function (req, res) {
   res.end();
 });
 
+router.post("/view-user-profile-prefetch", async function (req, res) {
+  let reqState = null,
+    userObj = null;
+
+  const inputs = {
+    userId: +req.body.userId || null,
+  };
+
+  try {
+    let accessLevel = "guest",
+      isFriend = null;
+
+    if (typeof inputs.userId !== "number" || inputs.userId < 1)
+      throw new Error("003EMEEN46EGO46G");
+
+    if (req.session.userId && req.session.userId === inputs.userId)
+      accessLevel = "own";
+    else if (req.session.userId) {
+      // check whether is friend or not
+      let r = await utilPre.retQueryOne(
+        `SELECT 1 AS state FROM friendship WHERE (? = friend_1 AND friend_2 = ?) OR (? = friend_2 AND friend_1 = ?)`,
+        [inputs.userId, req.session.userId, inputs.userId, req.session.userId],
+        shared.Connect.connWrap
+      );
+      if (r.state) accessLevel = "friend";
+      isFriend = r.state;
+    }
+
+    userObj = {
+      accessLevel,
+      isFriend,
+    };
+  } catch (e) {
+    console.log(e);
+    reqState = e.message;
+  }
+
+  res.send(JSON.stringify({ reqState, result: { userObj } }));
+  res.end();
+});
+
 router.post("/view-user-profile-ssr", async function (req, res) {
   let reqState = null,
     userObj = null;

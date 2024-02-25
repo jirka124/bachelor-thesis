@@ -110,7 +110,7 @@ class OdaiTable {
       includeEvents: ["tablemap", "writerows", "updaterows", "deleterows"],
       startAtEnd: true,
       includeSchema: {
-        bachelor_eshop: true,
+        bachelor_social: true,
       },
     });
 

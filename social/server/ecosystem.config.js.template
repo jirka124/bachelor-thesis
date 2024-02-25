@@ -18,6 +18,8 @@ module.exports = {
         VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
         VUE_APP_AUTH_SESS_KEY: "soconnect_session_key",
         VUE_APP_AUTH_SESS_SECRET: "secret", // TODO: replace with session secret
+        VUE_APP_ON_DEMAND_REINV_API: "http://localhost:5173/api/path-reinv", // API path or SSR server used for reinvalidation
+	      VUE_APP_ON_DEMAND_SECRET: "secret", // TODO: replace with some secret key shared with SSR server
         VUE_APP_DOMAIN_FRONT: "localhost", // TODO: replace with domain front-end app runs on
         VUE_APP_DOMAIN_BACK: "localhost", // TODO: replace with domain back-end app runs on
         VUE_APP_MYSQL_PORT: 3306, // TODO: replace with port mysql server is listening on
@@ -34,6 +36,8 @@ module.exports = {
         VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
         VUE_APP_AUTH_SESS_KEY: "soconnect_session_key",
         VUE_APP_AUTH_SESS_SECRET: "",
+        VUE_APP_ON_DEMAND_REINV_API: "",
+	      VUE_APP_ON_DEMAND_SECRET: "secret",
         VUE_APP_DOMAIN_FRONT: "",
         VUE_APP_DOMAIN_BACK: "",
         VUE_APP_MYSQL_PORT: 0,
