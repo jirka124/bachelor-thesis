@@ -47,8 +47,8 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
       Object.hasOwn(req.body, "paths")
     ) {
       if (Array.isArray(req.body.paths)) {
-        req.body.paths.map(async (path) => {
-          let url = new URL("http://none" + path);
+        req.body.paths.map(async (p) => {
+          let url = new URL("http://none" + p);
           const pathname =
             url.pathname.endsWith("/") && url.pathname !== "/"
               ? url.pathname.slice(0, -1)
@@ -70,13 +70,13 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
                 route.type,
                 pathname
               );
+
               const fileStats = await fs
                 .stat(fullFolderpath)
                 .catch((e) => null);
 
               if (fileStats && fileStats.isDirectory()) {
-                await fs
-                  .readdir()
+                (await fs.readdir(fullFolderpath))
                   .filter((fname) => fname.endsWith(".html"))
                   .map((fname) => {
                     fs.unlink(path.join(fullFolderpath, fname));
@@ -168,6 +168,7 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
             console.log(e);
           }
           const hint = await route.resFileHint(resFileHintParams);
+          req.hybridRender.hint = hint;
 
           if (hint.redirect) return res.redirect(hint.redirect); // redirect order
           if (hint.filepath === null) return next(); // skip action, go to SSR

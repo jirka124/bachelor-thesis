@@ -32,9 +32,12 @@ const ssgRoutes = hybridRoutes.routes
     const route = r[1];
     if (Array.isArray(route.list) && route.list.length > 0) {
       return route.list.map((rr) => {
-        if (rr.startsWith("?")) return `${route.url}${rr}`;
-        if (rr.startsWith("/")) return `${route.url}${rr}`;
-        return `${route.url}/${rr}`;
+        let prefix = "";
+        if (!route.url.includes("*") && !rr.startsWith(route.url))
+          prefix = route.url;
+        if (rr.startsWith("?")) return `${prefix}${rr}`;
+        if (rr.startsWith("/")) return `${prefix}${rr}`;
+        return `${prefix}/${rr}`;
       });
     } else if (route.url.includes("*"))
       console.log(
