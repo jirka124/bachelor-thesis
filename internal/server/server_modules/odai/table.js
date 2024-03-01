@@ -112,6 +112,9 @@ class OdaiTable {
       includeSchema: {
         bachelor_internal: true,
       },
+      excludeSchema: {
+        bachelor_internal: ["sessions"],
+      },
     });
 
     process.on("SIGINT", function () {
@@ -374,6 +377,8 @@ class OdaiTable {
 
     // find out table name
     const tableMap = e.tableMap[e.tableId];
+
+    console.log(e);
 
     // find out primary keys of table
     const table = Odai.tablesGet(tableMap.parentSchema, tableMap.tableName);

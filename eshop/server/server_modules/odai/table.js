@@ -112,6 +112,9 @@ class OdaiTable {
       includeSchema: {
         bachelor_eshop: true,
       },
+      excludeSchema: {
+        bachelor_eshop: ["sessions"],
+      },
     });
 
     process.on("SIGINT", function () {
