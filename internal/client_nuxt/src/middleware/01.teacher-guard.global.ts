@@ -1,14 +1,25 @@
 import { useTeacherStore } from "@/stores/teacher";
-import { api } from "@/plugins/02.axios.js";
+import { createAPI } from "@/plugins/02.axios.js";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (process.server) return;
-
   const teacherStore = useTeacherStore();
   const isTeacherPath = to.path.startsWith("/teacher");
   const isAuthPath = to.path.startsWith("/auth");
 
   if (isTeacherPath || isAuthPath) {
+    let opts = {};
+
+    if (process.server) {
+      const cookies = useRequestHeaders(["cookie"]).cookie;
+      opts = {
+        headers: {
+          Cookie: cookies,
+        },
+      };
+    }
+
+    const api = createAPI(opts);
+
     let r = (await api.post("teacher/is-logged")).data;
     if (r.reqState !== null) console.log(r.reqState);
 
