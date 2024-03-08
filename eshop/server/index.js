@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const Connect = require("./server_modules/connect");
 const Connect2 = require("./server_modules/connect2");
 const configureAPI = require("./configure");
@@ -8,7 +9,7 @@ const { OdaiTable } = require("./server_modules/odai/table");
 
 const { PORT = 5000 } = process.env;
 
-const dist = __dirname + "dist";
+const dist = path.join(__dirname, "dist");
 
 // API
 configureAPI(app);
@@ -19,8 +20,8 @@ app.use(express.static(dist));
 // allow serving of product pictures
 app.use("/public/products", express.static("uploads/products"));
 
-app.get("/", function (req, res) {
-  res.sendFile(dist + "index.html");
+app.get("*", function (req, res) {
+  res.sendFile(path.join(dist, "index.html"));
 });
 
 const bootServer = async () => {
