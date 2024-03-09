@@ -62,12 +62,10 @@ export default defineComponent({
     productUrlPath() {
       if (!this.product) return "data:,";
       return {
-        png: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/png/${
-          this.product.id
-        }.png`,
-        webp: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/webp/${
-          this.product.id
-        }.webp`,
+        png: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/png/${this.product.id
+          }.png`,
+        webp: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/webp/${this.product.id
+          }.webp`,
       };
     },
     shownImageUrl() {
@@ -227,28 +225,13 @@ export default defineComponent({
     <td colspan="400">
       <div class="edit-prod-row">
         <table>
-          <FieldInput
-            v-for="field in FIELDS"
-            :key="field.name"
-            :value="getProductValue(field.name)"
-            :name="field.name"
-            :input="field.input"
-            :needSave="field.needSave"
-            @saveStateChange="saveStateChange"
-          />
+          <FieldInput v-for="field in FIELDS" :key="field.name" :value="getProductValue(field.name)" :name="field.name"
+            :input="field.input" :needSave="field.needSave" @saveStateChange="saveStateChange" />
         </table>
         <div class="edit-prod-row-avatar">
-          <img
-            @drop="handleDropEvent"
-            @dragover="handleDragoverEvent"
-            @dragenter="dragAndDropOver = true"
-            @dragleave="dragAndDropOver = false"
-            :src="shownImageUrl"
-            alt="current avatar image"
-            widht="350"
-            height="350"
-            :class="{ dragged: dragAndDropOver }"
-          />
+          <img @drop="handleDropEvent" @dragover="handleDragoverEvent" @dragenter="dragAndDropOver = true"
+            @dragleave="dragAndDropOver = false" :src="shownImageUrl" alt="current avatar image" width="350"
+            height="350" :class="{ dragged: dragAndDropOver }" />
           <div>
             <span>{{ imageFileName }}</span>
             <i v-show="!uploadFile" class="fa-solid fa-floppy-disk"></i>
@@ -317,25 +300,22 @@ export default defineComponent({
   font-size: 18px;
 }
 
-.edit-prod-row > table {
+.edit-prod-row>table {
   border-spacing: 8px;
 }
 
-.edit-prod-row > table tr {
-}
+.edit-prod-row>table tr {}
 
-.edit-prod-row > table tr > td {
-}
+.edit-prod-row>table tr>td {}
 
-.edit-prod-row > div {
-}
+.edit-prod-row>div {}
 
 .edit-prod-row-avatar {
   text-align: center;
   padding: 8px;
 }
 
-.edit-prod-row-avatar > img {
+.edit-prod-row-avatar>img {
   width: 128px;
   height: 128px;
   border: 1px dashed #ccc;
@@ -343,14 +323,13 @@ export default defineComponent({
   object-fit: cover;
 }
 
-.edit-prod-row-avatar > img.dragged {
+.edit-prod-row-avatar>img.dragged {
   border: 2px dashed #388e3c;
 }
 
-.edit-prod-row-avatar > div {
-}
+.edit-prod-row-avatar>div {}
 
-.edit-prod-row-avatar > div > span {
+.edit-prod-row-avatar>div>span {
   padding-right: 8px;
 }
 
@@ -361,7 +340,7 @@ export default defineComponent({
   width: 100%;
 }
 
-.edit-prod-row-interact > button {
+.edit-prod-row-interact>button {
   font-size: 15px;
   color: white;
   background-color: #388e3c;

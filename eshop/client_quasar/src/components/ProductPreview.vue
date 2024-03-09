@@ -12,12 +12,10 @@ export default defineComponent({
   computed: {
     productUrlPath() {
       return {
-        png: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/png/${
-          this.product.productId
-        }.png`,
-        webp: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/webp/${
-          this.product.productId
-        }.webp`,
+        png: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/png/${this.product.productId
+          }.png`,
+        webp: `${import.meta.env.PLANT_LEVIT_SERVER_PUBLIC_PATH}/products/webp/${this.product.productId
+          }.webp`,
       };
     },
   },
@@ -29,25 +27,10 @@ export default defineComponent({
     <RouterLink :to="{ name: 'product', params: { productId: product.productId } }">
       <div class="product-preview-img">
         <picture>
-          <source
-            type="image/webp"
-            :srcset="productUrlPath.webp"
-            widht="350"
-            height="350"
-          />
-          <source
-            type="image/png"
-            :srcset="productUrlPath.png"
-            widht="350"
-            height="350"
-          />
-          <img
-            :src="productUrlPath.png"
-            :alt="`product ${product.productId} preview`"
-            widht="350"
-            height="350"
-            loading="lazy"
-          />
+          <source type="image/webp" :srcset="productUrlPath.webp" width="350" height="350" />
+          <source type="image/png" :srcset="productUrlPath.png" width="350" height="350" />
+          <img :src="productUrlPath.png" :alt="`product ${product.productId} preview`" width="350" height="350"
+            loading="lazy" />
         </picture>
       </div>
     </RouterLink>
