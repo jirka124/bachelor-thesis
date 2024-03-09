@@ -17,9 +17,10 @@ body {
   min-height: 100vh;
   color: black;
 }
+img {
+  width: auto;
+  height: auto;
+}
 picture {
   display: block;
-}
-picture > img {
-  width: 100%;
 }

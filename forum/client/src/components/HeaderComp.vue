@@ -26,9 +26,10 @@ export default defineComponent({
     <div id="header-identity">
       <RouterLink to="/">
         <picture>
-          <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" />
-          <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" />
-          <img id="header-identity-icon" src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
+          <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" width="64" height="64" />
+          <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" width="64" height="64" />
+          <img id="header-identity-icon" src="@/assets/identity/icon/icon-64.png" alt="company icon" width="64"
+            height="64" loading="lazy" />
         </picture>
       </RouterLink>
       <h2>DebateMingle</h2>

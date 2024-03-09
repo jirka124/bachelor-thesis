@@ -43,9 +43,11 @@ export default defineComponent({
         <ScheduleDay :daySchedule="daySchedule" />
       </div>
       <picture id="teacher-sched-quick-illus">
-        <source type="image/webp" srcset="@/assets/analytic-illustratino.webp" media="(min-width: 512px)" />
-        <source type="image/png" srcset="@/assets/analytic-illustratino.png" media="(min-width: 512px)" />
-        <img src="data:," alt="smart image" loading="lazy" />
+        <source type="image/webp" srcset="@/assets/analytic-illustratino.webp" media="(min-width: 512px)" width="500"
+          height="500" />
+        <source type="image/png" srcset="@/assets/analytic-illustratino.png" media="(min-width: 512px)" width="500"
+          height="500" />
+        <img src="data:," alt="smart image" width="500" height="500" loading="lazy" />
       </picture>
     </div>
     <div id="teacher-sched-cale">
@@ -85,6 +87,10 @@ export default defineComponent({
 
 #teacher-sched-quick-illus {
   width: 80%;
+}
+
+#teacher-sched-quick-illus>img {
+  width: 100%;
 }
 
 #teacher-sched-cale {

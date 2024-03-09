@@ -10,29 +10,37 @@ export default defineComponent({
   <div id="home-banner">
     <div id="home-banner-bg">
       <picture id="home-banner-bg-pic">
-        <source type="image/webp" srcset="@/assets/banner-moving-back-512.webp" media="(max-width: 512px)" />
-        <source type="image/jpeg" srcset="@/assets/banner-moving-back-512.jpg" media="(max-width: 512px)" />
-        <source type="image/webp" srcset="@/assets/banner-moving-back-768.webp" media="(max-width: 768px)" />
-        <source type="image/jpeg" srcset="@/assets/banner-moving-back-768.jpg" media="(max-width: 768px)" />
-        <source type="image/webp" srcset="@/assets/banner-moving-back-1024.webp" />
-        <source type="image/jpeg" srcset="@/assets/banner-moving-back-1024.jpg" />
-        <img id="home-banner-bg-img" src="@/assets/banner-moving-back-768.jpg" alt="abstract background" loading="lazy" />
+        <source type="image/webp" srcset="@/assets/banner-moving-back-512.webp" media="(max-width: 512px)" width="512"
+          height="341" />
+        <source type="image/jpeg" srcset="@/assets/banner-moving-back-512.jpg" media="(max-width: 512px)" width="512"
+          height="341" />
+        <source type="image/webp" srcset="@/assets/banner-moving-back-768.webp" media="(max-width: 768px)" width="768"
+          height="512" />
+        <source type="image/jpeg" srcset="@/assets/banner-moving-back-768.jpg" media="(max-width: 768px)" width="768"
+          height="512" />
+        <source type="image/webp" srcset="@/assets/banner-moving-back-1024.webp" width="1024" height="683" />
+        <source type="image/jpeg" srcset="@/assets/banner-moving-back-1024.jpg" width="1024" height="683" />
+        <img id="home-banner-bg-img" src="@/assets/banner-moving-back-768.jpg" alt="abstract background" width="768"
+          height="512" fetchpriority="high" />
       </picture>
     </div>
     <picture id="home-banner-bot-pic">
-      <source type="image/webp" srcset="@/assets/thinking-bot-256.webp" media="(max-width: 768px)" />
-      <source type="image/png" srcset="@/assets/thinking-bot-256.png" media="(max-width: 768px)" />
-      <source type="image/webp" srcset="@/assets/thinking-bot-400.webp" />
-      <source type="image/png" srcset="@/assets/thinking-bot-400.png" />
-      <img id="home-banner-bot-img" src="@/assets/thinking-bot-400.png" alt="robot illustration" loading="lazy" />
+      <source type="image/webp" srcset="@/assets/thinking-bot-256.webp" media="(max-width: 768px)" width="256"
+        height="256" />
+      <source type="image/png" srcset="@/assets/thinking-bot-256.png" media="(max-width: 768px)" width="256"
+        height="256" />
+      <source type="image/webp" srcset="@/assets/thinking-bot-400.webp" width="400" height="400" />
+      <source type="image/png" srcset="@/assets/thinking-bot-400.png" width="400" height="400" />
+      <img id="home-banner-bot-img" src="@/assets/thinking-bot-400.png" alt="robot illustration" width="400"
+        height="400" loading="lazy" />
     </picture>
     <div id="home-banner-caption">
       <b>Find your answer before asking a thing!</b>
       <p>The biggest world known discussion forum</p>
       <picture id="home-banner-catiption-pic">
-        <source type="image/webp" srcset="@/assets/identity/icon/icon-256.webp" />
-        <source type="image/png" srcset="@/assets/identity/icon/icon-256.png" />
-        <img src="@/assets/identity/icon/icon-256.png" alt="company icon" loading="lazy" />
+        <source type="image/webp" srcset="@/assets/identity/icon/icon-256.webp" width="256" height="256" />
+        <source type="image/png" srcset="@/assets/identity/icon/icon-256.png" width="256" height="256" />
+        <img src="@/assets/identity/icon/icon-256.png" alt="company icon" width="256" height="256" loading="lazy" />
       </picture>
     </div>
   </div>
@@ -116,7 +124,9 @@ export default defineComponent({
   transform: translate(-50%, 50%);
 }
 
-#home-banner-catiption-pic>img {}
+#home-banner-catiption-pic>img {
+  width: 100%;
+}
 
 @keyframes trianglePath {
 

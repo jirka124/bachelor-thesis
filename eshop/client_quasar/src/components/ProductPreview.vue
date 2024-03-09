@@ -29,11 +29,23 @@ export default defineComponent({
     <RouterLink :to="{ name: 'product', params: { productId: product.productId } }">
       <div class="product-preview-img">
         <picture>
-          <source type="image/webp" :srcset="productUrlPath.webp" />
-          <source type="image/png" :srcset="productUrlPath.png" />
+          <source
+            type="image/webp"
+            :srcset="productUrlPath.webp"
+            widht="350"
+            height="350"
+          />
+          <source
+            type="image/png"
+            :srcset="productUrlPath.png"
+            widht="350"
+            height="350"
+          />
           <img
             :src="productUrlPath.png"
             :alt="`product ${product.productId} preview`"
+            widht="350"
+            height="350"
             loading="lazy"
           />
         </picture>
@@ -49,11 +61,13 @@ export default defineComponent({
   width: 200px;
   color: #757575;
 }
+
 .product-preview-img:hover {
   background-color: #b3e3b5;
   border: 2px dashed #388e3c;
   transform: scale(0.9, 0.9);
 }
+
 .product-preview-img {
   display: flex;
   align-items: center;
@@ -65,9 +79,15 @@ export default defineComponent({
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .product-preview-img picture {
   width: 100%;
 }
+
+.product-preview-img picture img {
+  width: 100%;
+}
+
 .product-preview-price {
   font-size: 14px;
 }

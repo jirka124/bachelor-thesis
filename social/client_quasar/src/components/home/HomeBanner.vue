@@ -22,11 +22,15 @@ export default defineComponent({
 <template>
   <div id="banner">
     <picture id="banner-back">
-      <source type="image/webp" srcset="@/assets/home-banner-768.webp" media="(max-width: 512px)" />
-      <source type="image/webp" srcset="@/assets/home-banner-1280.webp" media="(max-width: 1024px)" />
-      <source type="image/jpeg" srcset="@/assets/home-banner-768.jpg" media="(max-width: 512px)" />
-      <source type="image/jpeg" srcset="@/assets/home-banner-1280.jpg" media="(max-width: 1024px)" />
-      <img src="@/assets/home-banner-1280.jpg" alt="banner" loading="lazy" />
+      <source type="image/webp" srcset="@/assets/home-banner-768.webp" media="(max-width: 512px)" width="768"
+        height="768" />
+      <source type="image/webp" srcset="@/assets/home-banner-1280.webp" media="(max-width: 1024px)" width="1280"
+        height="768" />
+      <source type="image/jpeg" srcset="@/assets/home-banner-768.jpg" media="(max-width: 512px)" width="768"
+        height="768" />
+      <source type="image/jpeg" srcset="@/assets/home-banner-1280.jpg" media="(max-width: 1024px)" width="1280"
+        height="768" />
+      <img src="@/assets/home-banner-1280.jpg" alt="banner" width="1280" height="768" loading="lazy" />
     </picture>
     <div v-show="menuToggleOn" id="banner-mobile-menu">
       <div class="banner-mobile-menu-item">
@@ -46,9 +50,9 @@ export default defineComponent({
     <header>
       <div id="header-left">
         <picture id="header-icon">
-          <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" />
-          <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" />
-          <img src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
+          <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" width="64" height="64" />
+          <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" width="64" height="64" />
+          <img src="@/assets/identity/icon/icon-64.png" alt="company icon" width="64" height="64" loading="lazy" />
         </picture>
         <h1 id="header-comp">SoConnect</h1>
         <p @click="goToLogin" id="header-log">Login</p>

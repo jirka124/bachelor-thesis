@@ -32,9 +32,9 @@ export default defineComponent({
       <div class="team-item-cont">
         <div class="team-item-main">
           <picture class="team-item-avatar">
-            <source type="image/webp" :srcset="`/team/${person.id}.webp`" />
-            <source type="image/jpeg" :srcset="`/team/${person.id}.jpg`" />
-            <img :src="`/team/${person.id}.jpg`" :alt="person.title" loading="lazy" />
+            <source type="image/webp" :srcset="`/team/${person.id}.webp`" width="512" height="512" />
+            <source type="image/jpeg" :srcset="`/team/${person.id}.jpg`" width="512" height="512" />
+            <img :src="`/team/${person.id}.jpg`" :alt="person.title" width="512" height="512" loading="lazy" />
           </picture>
           <p class="team-item-name">{{ person.name }}</p>
           <p class="team-item-title">{{ person.title }}</p>

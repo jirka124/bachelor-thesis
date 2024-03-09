@@ -71,9 +71,26 @@ export default defineComponent({
 
       <RouterLink to="/">
         <picture>
-          <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" />
-          <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" />
-          <img id="header-identity-icon" src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
+          <source
+            type="image/webp"
+            srcset="@/assets/identity/icon/icon-64.webp"
+            width="64"
+            height="64"
+          />
+          <source
+            type="image/png"
+            srcset="@/assets/identity/icon/icon-64.png"
+            width="64"
+            height="64"
+          />
+          <img
+            id="header-identity-icon"
+            src="@/assets/identity/icon/icon-64.png"
+            alt="company icon"
+            loading="lazy"
+            width="64"
+            height="64"
+          />
         </picture>
       </RouterLink>
       <b>Plant Levitate</b>
@@ -133,7 +150,7 @@ header {
   border: none;
 }
 
-#header-menu-toggle>i {
+#header-menu-toggle > i {
   font-size: 20px;
   color: #757575;
 }
@@ -142,11 +159,11 @@ header {
   width: 40px;
 }
 
-#header-identity>b {
+#header-identity > b {
   font-size: 24px;
 }
 
-nav>a {
+nav > a {
   font-size: 18px;
   text-decoration: none;
   padding: 8px;
@@ -154,7 +171,7 @@ nav>a {
   color: #757575;
 }
 
-nav>a.router-link-exact-active {
+nav > a.router-link-exact-active {
   font-size: 22px;
   text-decoration: underline;
 }
@@ -177,38 +194,39 @@ nav>a.router-link-exact-active {
   transform: translateY(150%);
 }
 
-#header-interact-srch>input,
-#header-interact-srch>button {
+#header-interact-srch > input,
+#header-interact-srch > button {
   background-color: transparent;
   border: none;
   outline: none;
   height: 32px;
 }
 
-#header-interact-srch>input {
+#header-interact-srch > input {
   padding-left: 6px;
 }
 
-#header-interact-srch>button {
+#header-interact-srch > button {
   width: 32px;
   height: 32px;
   cursor: pointer;
 }
 
-#header-interact-srch>button>i {
+#header-interact-srch > button > i {
   color: #757575;
 }
 
-#header-interact>p {}
+#header-interact > p {
+}
 
-#header-interact>button {
+#header-interact > button {
   padding: 4px 8px;
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 
-#header-interact>button>i {
+#header-interact > button > i {
   font-size: 20px;
   color: #757575;
 }
@@ -231,7 +249,7 @@ nav>a.router-link-exact-active {
 }
 
 @media only screen and (max-width: 350px) {
-  #header-identity>b {
+  #header-identity > b {
     display: none;
   }
 }

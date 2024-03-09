@@ -12,9 +12,11 @@ export default defineComponent({
       <NuxtPage />
     </div>
     <picture id="auth-sec-back">
-      <source type="image/webp" srcset="@/assets/school-illustration.webp" media="(min-width: 500px)" />
-      <source type="image/png" srcset="@/assets/school-illustration.png" media="(min-width: 500px)" />
-      <img src="data:," alt="school image" loading="lazy" />
+      <source type="image/webp" srcset="@/assets/school-illustration.webp" media="(min-width: 500px)" width="640"
+        height="384" />
+      <source type="image/png" srcset="@/assets/school-illustration.png" media="(min-width: 500px)" width="640"
+        height="384" />
+      <img src="data:," alt="school image" width="640" height="384" loading="lazy" />
     </picture>
   </div>
 </template>
@@ -32,6 +34,7 @@ export default defineComponent({
 
 #auth-sec-back {
   width: calc(100% - 500px);
+  overflow: hidden;
 }
 
 #auth-sec-back>img {

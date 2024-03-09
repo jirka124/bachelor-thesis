@@ -12,12 +12,14 @@ export default defineComponent({
       <h2>What is SoConnect?</h2>
       <div class="intro-point">
         <div>1</div>
-        <p>SoConnect is a cutting-edge social media platform that empowers people to connect, share, and engage with their
+        <p>SoConnect is a cutting-edge social media platform that empowers people to connect, share, and engage with
+          their
           communities and the world.</p>
       </div>
       <div class="intro-point">
         <div>2</div>
-        <p>We provide a dynamic and user-friendly space for meaningful conversations, content sharing, and the cultivation
+        <p>We provide a dynamic and user-friendly space for meaningful conversations, content sharing, and the
+          cultivation
           of relationships.</p>
       </div>
       <div class="intro-point">
@@ -37,9 +39,9 @@ export default defineComponent({
     <div id="intro-guide">
       <div id="intro-guide-identity">
         <picture id="intro-guide-identity-pic">
-          <source type="image/webp" srcset="@/assets/app-guide-avatar.webp" />
-          <source type="image/jpeg" srcset="@/assets/app-guide-avatar.jpg" />
-          <img src="@/assets/app-guide-avatar.jpg" alt="guide avatar" loading="lazy" />
+          <source type="image/webp" srcset="@/assets/app-guide-avatar.webp" width="512" height="512" />
+          <source type="image/jpeg" srcset="@/assets/app-guide-avatar.jpg" width="512" height="512" />
+          <img src="@/assets/app-guide-avatar.jpg" alt="guide avatar" width="512" height="512" loading="lazy" />
         </picture>
         <b>SoConnector 🧸</b>
       </div>
@@ -120,6 +122,7 @@ export default defineComponent({
 
 #intro-guide-identity-pic>img {
   border-radius: 16px;
+  width: 100%;
 }
 
 #intro-guide-identity>b {

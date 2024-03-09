@@ -9,7 +9,7 @@ export default defineComponent({
 <template>
   <div id="auth-role">
     <div id="auth-role-avatar">
-      <img src="@/assets/teacher-icon.svg" alt="role icon">
+      <img src="@/assets/teacher-icon.svg" width="129" height="129" alt="role icon">
     </div>
     <p id="auth-role-name">TEACHER ACCESS</p>
   </div>

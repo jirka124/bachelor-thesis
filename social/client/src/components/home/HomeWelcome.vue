@@ -16,9 +16,9 @@ export default defineComponent({
     <div id="welcome-cont">
       <div id="welcome-box">
         <picture id="welcome-icon">
-          <source type="image/webp" srcset="@/assets/identity/icon/icon-128.webp" />
-          <source type="image/png" srcset="@/assets/identity/icon/icon-128.png" />
-          <img src="@/assets/identity/icon/icon-128.png" alt="company icon" loading="lazy" />
+          <source type="image/webp" srcset="@/assets/identity/icon/icon-128.webp" width="128" height="128" />
+          <source type="image/png" srcset="@/assets/identity/icon/icon-128.png" width="128" height="128" />
+          <img src="@/assets/identity/icon/icon-128.png" alt="company icon" width="128" height="128" loading="lazy" />
         </picture>
         <h2 id="welcome-media">Welcome to SoConnect</h2>
         <em id="welcome-intro">The social media of 21's century, simple, fast and fun.</em>

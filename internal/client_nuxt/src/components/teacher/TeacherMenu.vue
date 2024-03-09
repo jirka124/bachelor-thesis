@@ -54,7 +54,7 @@ export default defineComponent({
     <div id="teacher-menu-over" :class="{ 'toggle-on': menuToggleOn }">
       <div id="teacher-menu-top">
         <div id="teacher-menu-sys-ico">
-          <img src="@/assets/identity/icon/icon-svg.svg" alt="system icon">
+          <img src="@/assets/identity/icon/icon-svg.svg" width="63" height="63" alt="system icon">
         </div>
         <p id="teacher-menu-sys-name" v-show="(menuToggleOn && !isW512) || (!menuToggleOn && isW512)">Attendance Tracker
           System</p>

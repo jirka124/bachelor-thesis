@@ -8,7 +8,7 @@ export default defineComponent({
 
 <template>
   <div id="auth-head">
-    <img src="@/assets/identity/icon/icon-svg.svg" alt="system icon">
+    <img src="@/assets/identity/icon/icon-svg.svg" width="30" height="30" alt="system icon">
     <h2>Attendance Tracker System </h2>
   </div>
 </template>

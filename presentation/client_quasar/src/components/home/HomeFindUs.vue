@@ -14,9 +14,10 @@ export default defineComponent({
     <div id="home-find-where">
       <div id="home-find-where-logo">
         <picture class="team-item-avatar">
-          <source type="image/webp" srcset="@/assets/identity/logo/logo-512.webp" />
-          <source type="image/png" srcset="@/assets/identity/logo/logo-512.png" />
-          <img :src="`@/assets/identity/logo/logo-512.png`" alt="Company logo" loading="lazy" />
+          <source type="image/webp" srcset="@/assets/identity/logo/logo-512.webp" width="512" height="522" />
+          <source type="image/png" srcset="@/assets/identity/logo/logo-512.png" width="512" height="522" />
+          <img :src="`@/assets/identity/logo/logo-512.png`" alt="Company logo" width="512" height="522"
+            loading="lazy" />
         </picture>
       </div>
       <div id="home-find-where-info">
@@ -51,6 +52,10 @@ export default defineComponent({
 
 #home-find-where-logo>picture {
   width: 90%;
+}
+
+#home-find-where-logo>picture>img {
+  width: 100%;
 }
 
 #home-find-where-info {

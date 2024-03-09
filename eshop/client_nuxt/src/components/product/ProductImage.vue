@@ -27,9 +27,15 @@ export default defineComponent({
 <template>
   <div id="product-image" v-if="product">
     <picture id="product-image-pic">
-      <source type="image/webp" :srcset="productUrlPath.webp" />
-      <source type="image/png" :srcset="productUrlPath.png" />
-      <img :src="productUrlPath.png" :alt="`product ${product.productId} preview`" />
+      <source type="image/webp" :srcset="productUrlPath.webp" widht="350" height="350" />
+      <source type="image/png" :srcset="productUrlPath.png" widht="350" height="350" />
+      <img
+        :src="productUrlPath.png"
+        :alt="`product ${product.productId} preview`"
+        widht="350"
+        height="350"
+        fetchpriority="high"
+      />
     </picture>
   </div>
 </template>
@@ -41,11 +47,16 @@ export default defineComponent({
   justify-content: center;
   padding: 2vh 2vw;
 }
+
 #product-image-pic {
   width: 512px;
   height: 512px;
   background-color: #ebfdec;
   border-radius: 16px;
+}
+
+#product-image-pic {
+  width: 100%;
 }
 
 @media only screen and (max-width: 950px) {
@@ -54,6 +65,7 @@ export default defineComponent({
     height: 256px;
   }
 }
+
 @media only screen and (max-width: 700px) {
   #product-image-pic {
     width: 100%;

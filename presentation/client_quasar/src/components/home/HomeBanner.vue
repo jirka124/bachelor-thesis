@@ -14,20 +14,24 @@ export default defineComponent({
 <template>
   <div id="home-banner">
     <picture id="home-banner-back">
-      <source type="image/webp" srcset="@/assets/banner-512.webp" media="(max-width: 512px)" />
-      <source type="image/webp" srcset="@/assets/banner-1024.webp" media="(max-width: 1024px)" />
-      <source type="image/webp" srcset="@/assets/banner-2048.webp" media="(min-width: 2048px)" />
-      <source type="image/jpeg" srcset="@/assets/banner-512.jpg" media="(max-width: 512px)" />
-      <source type="image/jpeg" srcset="@/assets/banner-1024.jpg" media="(max-width: 1024px)" />
-      <source type="image/jpeg" srcset="@/assets/banner-2048.jpg" media="(min-width: 2048px)" />
-      <img src="@/assets/banner-1024.jpg" alt="leader" loading="lazy" />
+      <source type="image/webp" srcset="@/assets/banner-512.webp" media="(max-width: 512px)" width="512" height="640" />
+      <source type="image/webp" srcset="@/assets/banner-1024.webp" media="(max-width: 1024px)" width="1024"
+        height="683" />
+      <source type="image/webp" srcset="@/assets/banner-2048.webp" media="(min-width: 2048px)" width="2048"
+        height="1365" />
+      <source type="image/jpeg" srcset="@/assets/banner-512.jpg" media="(max-width: 512px)" width="512" height="640" />
+      <source type="image/jpeg" srcset="@/assets/banner-1024.jpg" media="(max-width: 1024px)" width="1024"
+        height="683" />
+      <source type="image/jpeg" srcset="@/assets/banner-2048.jpg" media="(min-width: 2048px)" width="2048"
+        height="1365" />
+      <img src="@/assets/banner-1024.jpg" alt="leader" width="1024" height="683" fetchpriority="high" />
     </picture>
     <div id="home-banner-intro">
       <h1 id="home-banner-title">The Unity<span>Vanguard</span></h1>
       <picture id="home-banner-icon">
-        <source type="image/webp" srcset="@/assets/identity/icon/icon-375.webp" />
-        <source type="image/png" srcset="@/assets/identity/icon/icon-375.png" />
-        <img src="@/assets/identity/icon/icon-375.png" alt="icon" loading="lazy" />
+        <source type="image/webp" srcset="@/assets/identity/icon/icon-375.webp" width="375" height="375" />
+        <source type="image/png" srcset="@/assets/identity/icon/icon-375.png" width="375" height="375" />
+        <img src="@/assets/identity/icon/icon-375.png" alt="icon" width="375" height="375" fetchpriority="high" />
       </picture>
       <p id="home-banner-motto">Strength in Diversity,<br /> Progress for All</p>
     </div>
@@ -63,6 +67,7 @@ export default defineComponent({
 
 #home-banner-back>img {
   object-fit: cover;
+  width: 100%;
   height: 100%;
 }
 
@@ -93,6 +98,10 @@ export default defineComponent({
 
 #home-banner-icon {
   width: 375px;
+}
+
+#home-banner-icon>img {
+  width: 100%;
 }
 
 #home-banner-motto {

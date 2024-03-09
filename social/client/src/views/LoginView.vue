@@ -40,11 +40,15 @@ export default defineComponent({
 <template>
   <div id="login">
     <picture id="login-back">
-      <source type="image/webp" srcset="@/assets/home-banner-768.webp" media="(max-width: 512px)" />
-      <source type="image/webp" srcset="@/assets/home-banner-1280.webp" media="(max-width: 1024px)" />
-      <source type="image/jpeg" srcset="@/assets/home-banner-768.jpg" media="(max-width: 512px)" />
-      <source type="image/jpeg" srcset="@/assets/home-banner-1280.jpg" media="(max-width: 1024px)" />
-      <img src="@/assets/home-banner-1280.jpg" alt="banner" loading="lazy" />
+      <source type="image/webp" srcset="@/assets/home-banner-768.webp" media="(max-width: 512px)" width="768"
+        height="768" />
+      <source type="image/webp" srcset="@/assets/home-banner-1280.webp" media="(max-width: 1024px)" width="1280"
+        height="768" />
+      <source type="image/jpeg" srcset="@/assets/home-banner-768.jpg" media="(max-width: 512px)" width="768"
+        height="768" />
+      <source type="image/jpeg" srcset="@/assets/home-banner-1280.jpg" media="(max-width: 1024px)" width="1280"
+        height="768" />
+      <img src="@/assets/home-banner-1280.jpg" alt="banner" width="1280" height="768" loading="lazy" />
     </picture>
     <div id="login-form">
       <h1 id="login-form-title">LOGIN</h1>

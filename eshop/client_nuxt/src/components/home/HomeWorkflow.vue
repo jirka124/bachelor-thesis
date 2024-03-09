@@ -104,9 +104,25 @@ export default defineComponent({
     </div>
     <div id="workflow-demo">
       <picture :class="potDynamicClass">
-        <source type="image/webp" srcset="@/assets/demo-pot.webp" />
-        <source type="image/png" srcset="@/assets/demo-pot.png" />
-        <img src="@/assets/demo-pot.png" alt="levitating pot" loading="lazy" />
+        <source
+          type="image/webp"
+          srcset="@/assets/demo-pot.webp"
+          widht="478"
+          height="478"
+        />
+        <source
+          type="image/png"
+          srcset="@/assets/demo-pot.png"
+          widht="478"
+          height="478"
+        />
+        <img
+          src="@/assets/demo-pot.png"
+          alt="levitating pot"
+          widht="478"
+          height="478"
+          loading="lazy"
+        />
       </picture>
       <div id="workflow-demo-pot"></div>
     </div>
@@ -121,22 +137,27 @@ export default defineComponent({
   justify-content: space-around;
   padding: 3vh 2vw;
 }
+
 #workflow-switch {
   width: calc(100% - 300px);
 }
+
 #workflow-switch > h2 {
   font-size: 22px;
   padding-bottom: 1.8vh;
 }
+
 #workflow-system,
 #workflow-control {
   display: flex;
   flex-direction: column;
   row-gap: 1vh;
 }
+
 #workflow-system {
   row-gap: 2vh;
 }
+
 .workflow-system-point,
 .workflow-control-point {
   display: flex;
@@ -144,6 +165,7 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
 }
+
 .workflow-control-point-id.active,
 .workflow-control-point-id:hover {
   background-color: #bdbdbd;
@@ -163,6 +185,7 @@ export default defineComponent({
   cursor: pointer;
   transition: all 0.3s;
 }
+
 .workflow-system-point-text,
 .workflow-control-point-text {
   font-size: 18px;
@@ -174,10 +197,12 @@ export default defineComponent({
   padding: 4px 8px;
   background-color: #ebfdec;
 }
+
 .workflow-control-point-desc {
   width: 100%;
   padding: 6px 12px;
 }
+
 #workflow-toggle {
   display: flex;
   flex-wrap: wrap;
@@ -186,22 +211,32 @@ export default defineComponent({
   gap: 2vh 3vw;
   padding: 2vh 1vw;
 }
+
 #workflow-toggle > button {
 }
+
 #workflow-demo {
 }
+
 #workflow-demo > picture.levitate {
   transform: translateY(-10%);
 }
+
 #workflow-demo > picture.pulse {
   animation: pulse 2s infinite;
 }
+
 #workflow-demo > picture {
   position: relative;
   width: 300px;
   height: 300px;
   margin: 0 auto;
 }
+
+#workflow-demo > picture > img {
+  width: 100%;
+}
+
 #workflow-demo-pot {
   width: 120px;
   height: 20px;
@@ -218,6 +253,7 @@ export default defineComponent({
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10%);
   }
@@ -228,18 +264,22 @@ export default defineComponent({
     order: 2;
     width: 100%;
   }
+
   #workflow-demo {
     order: 1;
     width: 100%;
   }
+
   #workflow-demo > picture {
     width: 60%;
     height: auto;
   }
+
   #workflow-demo-pot {
     width: 40%;
     height: 1.8vh;
   }
+
   #workflow-switch > h2 {
     text-align: center;
   }

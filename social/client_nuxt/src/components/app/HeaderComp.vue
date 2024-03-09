@@ -25,9 +25,9 @@ export default defineComponent({
   <header>
     <div id="header-l">
       <picture @click="goToHome" id="header-l-pic">
-        <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" />
-        <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" />
-        <img src="@/assets/identity/icon/icon-64.png" alt="company icon" loading="lazy" />
+        <source type="image/webp" srcset="@/assets/identity/icon/icon-64.webp" width="64" height="64" />
+        <source type="image/png" srcset="@/assets/identity/icon/icon-64.png" width="64" height="64" />
+        <img src="@/assets/identity/icon/icon-64.png" alt="company icon" width="64" height="64" loading="lazy" />
       </picture>
       <button id="header-l-srch">
         <i class="fa-solid fa-magnifying-glass"></i>

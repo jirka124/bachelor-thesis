@@ -9,9 +9,9 @@ export default defineComponent({
 <template>
   <div id="join">
     <picture>
-      <source type="image/webp" srcset="@/assets/identity/icon/icon-256.webp" />
-      <source type="image/png" srcset="@/assets/identity/icon/icon-256.png" />
-      <img src="@/assets/identity/icon/icon-256.png" alt="company icon" loading="lazy" />
+      <source type="image/webp" srcset="@/assets/identity/icon/icon-256.webp" width="256" height="256" />
+      <source type="image/png" srcset="@/assets/identity/icon/icon-256.png" width="256" height="256" />
+      <img src="@/assets/identity/icon/icon-256.png" alt="company icon" width="256" height="256" loading="lazy" />
     </picture>
     <p>JOIN THE</p>
     <p>SoConnect</p>
@@ -30,6 +30,10 @@ export default defineComponent({
 
 #join>picture {
   width: 256px;
+}
+
+#join>picture>img {
+  width: 100%;
 }
 
 #join>p {

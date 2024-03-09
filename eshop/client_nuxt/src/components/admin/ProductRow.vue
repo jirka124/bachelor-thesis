@@ -245,6 +245,8 @@ export default defineComponent({
             @dragleave="dragAndDropOver = false"
             :src="shownImageUrl"
             alt="current avatar image"
+            widht="350"
+            height="350"
             :class="{ dragged: dragAndDropOver }"
           />
           <div>

@@ -44,9 +44,9 @@ export default defineComponent({
 
 <template>
   <picture @click="goToUserProfile" class="user-avatar">
-    <source type="image/webp" :srcset="userAvatarWebp" />
-    <source type="image/jpeg" :srcset="userAvatarJpg" />
-    <img :src="userAvatarJpg" :alt="`user (${userId}) avatar`" loading="lazy" />
+    <source type="image/webp" :srcset="userAvatarWebp" width="512" height="512" />
+    <source type="image/jpeg" :srcset="userAvatarJpg" width="512" height="512" />
+    <img :src="userAvatarJpg" :alt="`user (${userId}) avatar`" width="512" height="512" loading="lazy" />
   </picture>
 </template>
 

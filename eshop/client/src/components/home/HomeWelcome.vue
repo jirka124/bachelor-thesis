@@ -10,11 +10,23 @@ export default defineComponent({
   <div id="welcome">
     <div id="welcome-pic">
       <picture>
-        <source type="image/webp" srcset="@/assets/identity/logo/logo-256.webp" />
-        <source type="image/png" srcset="@/assets/identity/logo/logo-256.png" />
+        <source
+          type="image/webp"
+          srcset="@/assets/identity/logo/logo-256.webp"
+          width="256"
+          height="256"
+        />
+        <source
+          type="image/png"
+          srcset="@/assets/identity/logo/logo-256.png"
+          width="256"
+          height="256"
+        />
         <img
           src="@/assets/identity/logo/logo-256.png"
           alt="company logo"
+          width="256"
+          height="256"
           loading="lazy"
         />
       </picture>
@@ -41,11 +53,18 @@ export default defineComponent({
   padding: 8px;
   background-color: #ebfdec;
 }
+
 #welcome-pic {
 }
+
 #welcome-pic > picture {
   width: 300px;
 }
+
+#welcome-pic > picture > img {
+  width: 100%;
+}
+
 #welcome-text {
   text-align: center;
   display: flex;
@@ -56,18 +75,22 @@ export default defineComponent({
   min-width: 300px;
   max-width: 600px;
 }
+
 #welcome-text-welc {
   font-size: 18px;
   color: #979797;
 }
+
 #welcome-text-name {
   font-size: 30px;
 }
+
 #welcome-text-line {
   width: 60px;
   height: 3px;
   background-color: #757575;
 }
+
 #welcome-text-info {
   font-size: 18px;
 }
@@ -76,9 +99,11 @@ export default defineComponent({
   #welcome-pic {
     order: 2;
   }
+
   #welcome-pic > picture {
     width: 200px;
   }
+
   #welcome-text {
     order: 1;
   }
