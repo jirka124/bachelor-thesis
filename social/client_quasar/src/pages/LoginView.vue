@@ -7,8 +7,8 @@ export default defineComponent({
   name: "LoginView",
   data() {
     return {
-      loginVal: "root",
-      passwordVal: "root123",
+      loginVal: "",
+      passwordVal: "",
     }
   },
   computed: {

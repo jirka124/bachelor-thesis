@@ -7,9 +7,9 @@ export default defineComponent({
   name: "SignuView",
   data() {
     return {
-      loginVal: "root",
-      passwordVal: "root123",
-      passwordAgVal: "root123"
+      loginVal: "",
+      passwordVal: "",
+      passwordAgVal: ""
     }
   },
   computed: {
