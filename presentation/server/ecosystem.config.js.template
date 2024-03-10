@@ -1,0 +1,34 @@
+module.exports = {
+  apps: [
+    {
+      name: "VanguardUnityServerApi",
+      script: "./index.js",
+      watch: ["./"],
+      watch_delay: 1000,
+      ignore_watch: ["node_modules", "uploads"],
+      wait_ready: true,
+      shutdown_with_message: true,
+      watch_options: {
+        followSymlinks: false,
+      },
+      env_development: {
+        NODE_ENV: "development",
+        VUE_APP_START_SERVER: 1,
+        VUE_APP_DEMO: 1,
+        VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
+        VUE_APP_DOMAIN_FRONT: "localhost", // TODO: replace with domain front-end app runs on
+        VUE_APP_DOMAIN_BACK: "localhost", // TODO: replace with domain back-end app runs on
+        VUE_APP_SERVER_ROOT: "C:\\path\\to\\presentation\\server", // TODO: replace with root of project's server folder
+      },
+      env_production: {
+        NODE_ENV: "production",
+        VUE_APP_START_SERVER: 1,
+        VUE_APP_DEMO: 0,
+        VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
+        VUE_APP_DOMAIN_FRONT: "",
+        VUE_APP_DOMAIN_BACK: "",
+        VUE_APP_SERVER_ROOT: "",
+      },
+    },
+  ],
+};
