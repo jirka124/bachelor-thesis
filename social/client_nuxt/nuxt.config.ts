@@ -85,6 +85,20 @@ export default defineNuxtConfig({
       await preparePm2EcoSys();
       await prepareSysEnv();
     },
+    "build:manifest"(manifest) {
+      for (const key in manifest) {
+        // make changes only to pages
+        if (key.endsWith(".vue")) {
+          // filter page's assets
+          manifest[key].assets = manifest[key].assets?.filter(
+            (asset) =>
+              !asset.endsWith(".png") &&
+              !asset.endsWith(".jpg") &&
+              !asset.endsWith(".jpeg")
+          );
+        }
+      }
+    },
   },
   // based on https://stackoverflow.com/questions/75849646/can-you-invalidate-swr-static-routes-depending-on-user-actions-using-hybrid-rend
   nitro: {
@@ -114,23 +128,5 @@ export default defineNuxtConfig({
     "/app/signup": {
       prerender: true,
     },
-    /*
-    "/about": {
-      prerender: true,
-    },
-    "/stock": {
-      prerender: true,
-    },
-    "/product/**": {
-      isr: true,
-      cache: {
-        base: "db",
-        name: "invalidable",
-      },
-    },
-    "/admin/**": {
-      ssr: false,
-    },
-    */
   },
 });

@@ -5,6 +5,7 @@ const dotenvExpand = require("dotenv-expand");
 myEnv = dotenv.config({
   path: `.env`,
 });
+dotenvExpand.expand(myEnv);
 
 module.exports = {
   apps: [
