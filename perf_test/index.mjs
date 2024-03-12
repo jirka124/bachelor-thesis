@@ -2,6 +2,7 @@ import puppeteer from "puppeteer";
 import lighthouse from "lighthouse";
 import fs from "fs";
 import path from "path";
+import XLSX from "xlsx";
 
 import { fileURLToPath } from "url";
 import args from "./src/arg-parser.js";
@@ -27,6 +28,9 @@ const lightConf = {
       "network-requests",
       "mainthread-work-breakdown",
     ],
+    throttling: {
+      cpuSlowdownMultiplier: 12.2,
+    },
   },
 };
 
@@ -206,7 +210,7 @@ const runAnalyze = () => {
     audits.map((audit) => {
       const ad = auditDataVal.map((adv) => adv[audit]);
 
-      results[audit] = calcQuartiles(ad.sort());
+      results[audit] = calcQuartiles(ad.sort((a, b) => a - b));
     });
 
     auditData.set(reportId, results);
@@ -369,11 +373,122 @@ const runCompare = () => {
     });
   });
 
+  // add total of audits row
+  finalData.forEach((scenerioObj, scenerioId) => {
+    // join audits of all reports of scenerio group and calculate average of it
+    Object.entries(scenerioObj).map(([groupId, groupObj]) => {
+      let totalQ1 = 0,
+        totalQ2 = 0,
+        totalQ3 = 0;
+
+      Object.entries(groupObj).map(([auditId, auditObj]) => {
+        totalQ1 += auditObj["q1-perc"];
+        totalQ2 += auditObj["q2-perc"];
+        totalQ3 += auditObj["q3-perc"];
+      });
+
+      groupObj["total-q1"] = totalQ1;
+      groupObj["total-q2"] = totalQ2;
+      groupObj["total-q3"] = totalQ3;
+      groupObj["total"] = totalQ1 + totalQ2 + totalQ3;
+    });
+  });
+
   // save the short final report
   fs.writeFileSync(
     path.join(__dirname, OUTPUT_DIR_ROOT, "final-result-short.json"),
     JSON.stringify(Object.fromEntries(finalData.entries()), null, 2)
   );
+
+  const audits = lightConf.settings.onlyAudits;
+  const rows = [...audits, "total-q1", "total-q2", "total-q3", "total"];
+  const convObjs = [];
+
+  // perform actions to build an JSON object convertable to Excel sheet
+  finalData.forEach((scenerioObj, scenerioId) => {
+    const convObj = [];
+
+    rows.map((row) => {
+      // Resolve column total rows
+      const totals = ["total-q1", "total-q2", "total-q3", "total"];
+      if (totals.includes(row)) {
+        const obj = {};
+
+        let rowName = "";
+        if (row === "total-q1") rowName = "Celkem Q1";
+        if (row === "total-q2") rowName = "Celkem Q2";
+        if (row === "total-q3") rowName = "Celkem Q3";
+        if (row === "total") rowName = "Celkem";
+
+        obj["Audit"] = `${rowName} (%)`;
+
+        Object.entries(scenerioObj).map(([groupId, groupObj]) => {
+          // Resolve the group display name
+          let group = groupId.split("_")[1];
+          if (group === "vue") group = "Vue.js";
+          else if (group === "quasar") group = "Quasar";
+          else if (group === "nuxt") group = "Nuxt 3";
+          else if (group === undefined) group = "Průměr";
+
+          // Get actual value of total row
+          let value = groupObj[row];
+
+          // Perfrom rounding of value and perc based on Audit
+          value = value.toFixed(1);
+
+          // set actual value of property
+          obj[group] = value;
+        });
+
+        return convObj.push(obj);
+      }
+
+      // resolve the row shortcut
+      const rowShort = row
+        .split("-")
+        .map((rowPart) => rowPart[0].toUpperCase())
+        .join("");
+
+      let rowUnit = "ms";
+      if (rowShort === "CLS" || rowShort === "NR") rowUnit = "-";
+      else if (rowShort === "TBW") rowUnit = "byte";
+
+      // Run for each Quartile Q1 Q2 Q3
+      for (let quartile = 1; quartile < 4; quartile++) {
+        const obj = {};
+
+        // set short ID
+        obj["Audit"] = `${rowShort} Q${quartile} (${rowUnit})`;
+
+        Object.entries(scenerioObj).map(([groupId, groupObj]) => {
+          // Resolve the group display name
+          let group = groupId.split("_")[1];
+          if (group === "vue") group = "Vue.js";
+          else if (group === "quasar") group = "Quasar";
+          else if (group === "nuxt") group = "Nuxt 3";
+          else if (group === undefined) group = "Průměr";
+
+          // Get actual value of audit and perc
+          let value = groupObj[row][`q${quartile}`];
+          let perc = groupObj[row][`q${quartile}-perc`];
+
+          // Perfrom rounding of value and perc based on Audit
+          value = value.toFixed(rowShort === "CLS" ? 4 : 1);
+          perc = perc.toFixed(1);
+
+          // set actual value of property and perc
+          if (group === "Průměr") obj[group] = `${value}`;
+          else obj[group] = `${value} (${perc}%)`;
+        });
+
+        convObj.push(obj);
+      }
+    });
+
+    convObjs.push(convObj);
+  });
+
+  generateExcel(convObjs);
 };
 
 // start the code execution
@@ -382,6 +497,32 @@ const start = async () => {
 
   await runBenchmark();
   runAnalyze();
+};
+
+const generateExcel = (dataArr) => {
+  // Create a workbook
+  const workbook = XLSX.utils.book_new();
+
+  for (let i = 0, len = dataArr.length; i < len; i++) {
+    const data = dataArr[i];
+    const sheetName = `Sheet_${i}`;
+
+    // Convert JSON data to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Add the worksheet into workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+  }
+
+  // Convert the workbook to a binary string
+  const excelBuffer = XLSX.write(workbook, {
+    type: "buffer",
+    bookType: "xlsx",
+  });
+
+  // save the excel file to root folder
+  fs.writeFileSync("data.xlsx", excelBuffer);
+  console.log("Excel file created successfully: data.xlsx");
 };
 
 await start();

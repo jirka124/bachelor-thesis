@@ -31,7 +31,7 @@ export const calcQuartile = (data, Q) => {
   if (data.length < 1) return NaN;
 
   // calculate index of Q
-  const index = data.length * Q - 1;
+  const index = (data.length + 1) * Q - 1;
   if (index < 0) console.error("NOT ENOUGH DATA for: " + Q);
 
   // Check if index positions are integers

@@ -3,7 +3,7 @@ import args from "../arg-parser.js";
 import { delay } from "../utils.js";
 
 const stack = args.a;
-const port = stack === "vue" ? 5000 : 5173;
+const port = stack === "vue" && args.m === "bench" ? 5000 : 5173;
 
 const REPORT_GROUP = `eshop_${stack}`;
 
