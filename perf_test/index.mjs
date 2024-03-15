@@ -311,8 +311,9 @@ const runCompare = () => {
     Object.entries(avgGroupObj).map(([reportId, reportObj]) => {
       Object.entries(reportObj).map(([auditId, auditObj]) => {
         Object.entries(auditObj).map(([qId, qVal]) => {
-          avgGroupObj[reportId][auditId][qId] /=
-            Object.entries(scenerioObj).length;
+          avgGroupObj[reportId][auditId][qId] =
+            avgGroupObj[reportId][auditId][qId] /
+              Object.entries(scenerioObj).length || 0;
         });
       });
     });
@@ -326,7 +327,7 @@ const runCompare = () => {
         Object.entries(reportObj).map(([auditId, auditObj]) => {
           Object.entries(auditObj).map(([qId, qVal]) => {
             const avgVal = avgGroupObj[reportId][auditId][qId];
-            auditObj[`${qId}-perc`] = ((qVal - avgVal) / avgVal) * 100;
+            auditObj[`${qId}-perc`] = ((qVal - avgVal) / avgVal) * 100 || 0;
           });
         });
       });
@@ -353,7 +354,8 @@ const runCompare = () => {
             if (!Object.hasOwn(reportJoinAudits[auditId], qId))
               reportJoinAudits[auditId][qId] = 0;
 
-            reportJoinAudits[auditId][qId] += qVal;
+            if (qId.endsWith("-perc")) reportJoinAudits[auditId][qId] = 0;
+            else reportJoinAudits[auditId][qId] += qVal;
           });
         });
       });
@@ -366,8 +368,20 @@ const runCompare = () => {
       // end calculation of average for similar groups and set result to bundle
       Object.entries(reportJoinAudits).map(([auditId, auditObj]) => {
         Object.entries(auditObj).map(([qId, qVal]) => {
-          reportJoinAudits[auditId][qId] /= reportCount;
+          reportJoinAudits[auditId][qId] =
+            reportJoinAudits[auditId][qId] / reportCount || 0;
           groupObj[auditId] = auditObj;
+        });
+      });
+    });
+
+    // compute the below/above average for each of similar groups
+    Object.entries(scenerioObj).map(([groupId, groupObj]) => {
+      Object.entries(groupObj).map(([auditId, auditObj]) => {
+        Object.entries(auditObj).map(([qId, qVal]) => {
+          const avgGroupObj = scenerioObj.average;
+          const avgVal = avgGroupObj[auditId][qId];
+          auditObj[`${qId}-perc`] = ((qVal - avgVal) / avgVal) * 100 || 0;
         });
       });
     });
