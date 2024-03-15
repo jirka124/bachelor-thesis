@@ -38,31 +38,12 @@ const prepareSysEnv = async () => {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  app: {
-    head: {
-      link: [
-        {
-          // get Google Oswald font
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css?family=Oswald",
-        },
-      ],
-      script: [
-        {
-          // get Fontawesome icons
-          src: "https://kit.fontawesome.com/e84002e394.js",
-          crossorigin: "anonymous",
-          defer: true,
-        },
-      ],
-    },
-  },
   devServer: {
     port: 5173, // set development port
   },
   css: ["~/assets/main.css"], // require global CSS
   srcDir: "src/", // define own src directory (as in Vue.js)
-  modules: ["@pinia/nuxt"], // integrate Pinia module
+  modules: ["@pinia/nuxt", "nuxt-purgecss"], // integrate Pinia module
   hooks: {
     "vite:extendConfig"(config, { isClient, isServer }) {
       // Set environment variable prefix
@@ -92,16 +73,15 @@ export default defineNuxtConfig({
     },
     "build:manifest"(manifest) {
       for (const key in manifest) {
-        // make changes only to pages
-        if (key.endsWith(".vue")) {
-          // filter page's assets
+        // filter assets to exclude images
+        if (manifest[key].assets)
           manifest[key].assets = manifest[key].assets?.filter(
             (asset) =>
               !asset.endsWith(".png") &&
               !asset.endsWith(".jpg") &&
-              !asset.endsWith(".jpeg")
+              !asset.endsWith(".jpeg") &&
+              !asset.endsWith(".webp")
           );
-        }
       }
     },
   },

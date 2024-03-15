@@ -1,3 +1,6 @@
+/* Import local Font Awesome assets */
+@import url("/f-awesome/css/all.min.css");
+
 /* PROJECT DEFAULTS */
 * {
   font-family:
@@ -23,4 +26,13 @@ img {
 }
 picture {
   display: block;
+}
+
+/* Define GFonts local */
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local("Cinzel"), url("/fonts/Cinzel.woff2") format("woff2"), url("/fonts/Cinzel.woff") format("woff");
 }

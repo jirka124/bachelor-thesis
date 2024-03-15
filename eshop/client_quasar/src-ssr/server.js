@@ -10,7 +10,7 @@
  * anything you import here (except for express and compression).
  */
 import express from "express";
-import compression from "compression";
+// import compression from "compression";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
@@ -64,7 +64,7 @@ export const create = ssrCreate((/* { ... } */) => {
   // place here any middlewares that
   // absolutely need to run before anything else
   if (process.env.PROD) {
-    app.use(compression());
+    // app.use(compression());
   }
 
   return app;
@@ -199,9 +199,10 @@ export const renderPreloadTag = ssrRenderPreloadTag((file) => {
     return `<link rel="preload" href="${file}" as="image" type="image/gif">`;
   }
 
+  /*
   if (webpRE.test(file) === true) {
     return `<link rel="preload" href="${file}" as="image" type="image/webp">`;
-  }
+  }*/
 
   // disable preload of .jpg and .png as being used as backup for webp
   /*if (jpgRE.test(file) === true) {

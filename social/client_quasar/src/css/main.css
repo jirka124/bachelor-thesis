@@ -1,3 +1,6 @@
+/* Import local Font Awesome assets */
+@import url("/f-awesome/css/all.min.css");
+
 /* PROJECT DEFAULTS */
 * {
   font-family:
@@ -80,4 +83,13 @@ picture {
   padding: 8px;
   border: 3px solid #AFE64E;
   border-radius: 32px;
+}
+
+/* Define GFonts local */
+@font-face {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local("Roboto"), url("/fonts/Roboto.woff2") format("woff2"), url("/fonts/Roboto.woff") format("woff");
 }

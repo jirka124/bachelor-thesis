@@ -105,6 +105,10 @@ export default defineComponent({
   width: 90%;
 }
 
+.team-item-avatar>img {
+  width: 100%;
+}
+
 .team-item-name {
   font-size: calc(20px * var(--size-modify));
   color: white;

@@ -62,7 +62,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/main.css"], // require global CSS
   srcDir: "src/", // define own src directory (as in Vue.js)
-  modules: ["@pinia/nuxt"], // integrate Pinia module
+  modules: ["@pinia/nuxt", "nuxt-purgecss"], // integrate Pinia module
   hooks: {
     "vite:extendConfig"(config, { isClient, isServer }) {
       // Set environment variable prefix
@@ -83,16 +83,15 @@ export default defineNuxtConfig({
     },
     "build:manifest"(manifest) {
       for (const key in manifest) {
-        // make changes only to pages
-        if (key.endsWith(".vue")) {
-          // filter page's assets
+        // filter assets to exclude images
+        if (manifest[key].assets)
           manifest[key].assets = manifest[key].assets?.filter(
             (asset) =>
               !asset.endsWith(".png") &&
               !asset.endsWith(".jpg") &&
-              !asset.endsWith(".jpeg")
+              !asset.endsWith(".jpeg") &&
+              !asset.endsWith(".webp")
           );
-        }
       }
     },
   },

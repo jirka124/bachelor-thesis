@@ -1,3 +1,6 @@
+/* Import local Font Awesome assets */
+@import url("/f-awesome/css/all.min.css");
+
 /* PROJECT DEFAULTS */
 * {
   font-family:
@@ -68,4 +71,13 @@ picture {
   outline: none;
   cursor: pointer;
   transition: all 0.3s;
+}
+
+/* Define GFonts local */
+@font-face {
+  font-family: "Oswald";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local("Oswald"), url("/fonts/Oswald.woff2") format("woff2"), url("/fonts/Oswald.woff") format("woff");
 }
