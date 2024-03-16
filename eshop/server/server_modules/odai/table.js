@@ -20,6 +20,9 @@ class OdaiTable {
   static parser = new Parser();
 
   static async loadClass() {
+    // Skip loading ODAI in preview mode
+    if (Number(process.env.VUE_APP_PREVIEW)) return;
+
     await this.startEventWatcher();
   }
 
@@ -789,7 +792,9 @@ class OdaiTable {
     @param options, object with config of operation:
   */
   static async read(options) {
-    if (!options.path) {
+    // Skip loading ODAI in preview mode
+
+    if (!options.path || Number(process.env.VUE_APP_PREVIEW)) {
       // fired by client, simply execute and return result
       let r = await utilPre.retQuery(
         options.query,

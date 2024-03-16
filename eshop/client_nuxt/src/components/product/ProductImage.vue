@@ -48,7 +48,7 @@ export default defineComponent({
   border-radius: 16px;
 }
 
-#product-image-pic {
+#product-image-pic>img {
   width: 100%;
 }
 

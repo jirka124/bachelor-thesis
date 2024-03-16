@@ -13,6 +13,7 @@ module.exports = {
       },
       env_development: {
         NODE_ENV: "development",
+        VUE_APP_PREVIEW: 1, // TODO: 0 required for on-demand ISR, but prepare DB and user first or set
         VUE_APP_START_SERVER: 1,
         VUE_APP_DEMO: 1,
         VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",
@@ -31,6 +32,7 @@ module.exports = {
       },
       env_production: {
         NODE_ENV: "production",
+        VUE_APP_PREVIEW: 1,
         VUE_APP_START_SERVER: 1,
         VUE_APP_DEMO: 0,
         VUE_APP_AUTH_HEAD_NAME: "Auth-Custom-Sess-Token",

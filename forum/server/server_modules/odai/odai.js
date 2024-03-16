@@ -36,6 +36,9 @@ class Odai {
   };
 
   static async loadClass() {
+    // Skip loading ODAI in preview mode
+    if (Number(process.env.VUE_APP_PREVIEW)) return;
+
     // create and use reinv_reserved_dtb if not yet created
     await this.initDatabase();
     // create reinvalidatin tables for each table present in OdaiTables

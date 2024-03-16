@@ -7,7 +7,7 @@ const app = express();
 const { Odai } = require("./server_modules/odai/odai");
 const { OdaiTable } = require("./server_modules/odai/table");
 
-const { PORT = 5000 } = process.env;
+const { PORT = 5001 } = process.env;
 
 const dist = path.join(__dirname, "dist");
 

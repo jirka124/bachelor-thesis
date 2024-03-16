@@ -8,6 +8,9 @@ function delay(ms) {
 
 class Connect2 {
   static async loadClass() {
+    // Skip loading ODAI in preview mode
+    if (Number(process.env.VUE_APP_PREVIEW)) return;
+
     this.connWrap = {};
     await this.startConn();
   }

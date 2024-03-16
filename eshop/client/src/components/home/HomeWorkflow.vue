@@ -53,11 +53,7 @@ export default defineComponent({
       <template v-if="activeToggle === 0">
         <h2>How does it work?</h2>
         <div id="workflow-system">
-          <div
-            class="workflow-system-point"
-            v-for="system in workflowSystems"
-            :key="system.id"
-          >
+          <div class="workflow-system-point" v-for="system in workflowSystems" :key="system.id">
             <div class="workflow-system-point-id">{{ system.id }}</div>
             <div class="workflow-system-point-text">{{ system.text }}</div>
           </div>
@@ -67,16 +63,9 @@ export default defineComponent({
       <template v-else>
         <h2>Control modes</h2>
         <div id="workflow-control">
-          <div
-            class="workflow-control-point"
-            v-for="control in workflowControls"
-            :key="control.id"
-          >
-            <div
-              class="workflow-control-point-id"
-              :class="{ active: control.id - 1 === activeMode }"
-              @click="toggleMode(control.id)"
-            ></div>
+          <div class="workflow-control-point" v-for="control in workflowControls" :key="control.id">
+            <div class="workflow-control-point-id" :class="{ active: control.id - 1 === activeMode }"
+              @click="toggleMode(control.id)"></div>
             <div class="workflow-control-point-text">
               {{ control.text }}
             </div>
@@ -88,41 +77,19 @@ export default defineComponent({
       </template>
 
       <div id="workflow-toggle">
-        <button
-          :class="{ 'btn-1': activeToggle === 1, 'btn-2': activeToggle === 0 }"
-          @click="activeToggle = 0"
-        >
+        <button :class="{ 'btn-1': activeToggle === 1, 'btn-2': activeToggle === 0 }" @click="activeToggle = 0">
           SYSTEM
         </button>
-        <button
-          :class="{ 'btn-1': activeToggle === 0, 'btn-2': activeToggle === 1 }"
-          @click="activeToggle = 1"
-        >
+        <button :class="{ 'btn-1': activeToggle === 0, 'btn-2': activeToggle === 1 }" @click="activeToggle = 1">
           DEMO
         </button>
       </div>
     </div>
     <div id="workflow-demo">
       <picture :class="potDynamicClass">
-        <source
-          type="image/webp"
-          srcset="@/assets/demo-pot.webp"
-          width="478"
-          height="478"
-        />
-        <source
-          type="image/png"
-          srcset="@/assets/demo-pot.png"
-          width="478"
-          height="478"
-        />
-        <img
-          src="@/assets/demo-pot.png"
-          alt="levitating pot"
-          width="478"
-          height="478"
-          loading="lazy"
-        />
+        <source type="image/webp" srcset="@/assets/demo-pot.webp" width="478" height="478" />
+        <source type="image/png" srcset="@/assets/demo-pot.png" width="478" height="478" />
+        <img src="@/assets/demo-pot.png" alt="levitating pot" width="478" height="478" loading="lazy" />
       </picture>
       <div id="workflow-demo-pot"></div>
     </div>
@@ -142,7 +109,7 @@ export default defineComponent({
   width: calc(100% - 300px);
 }
 
-#workflow-switch > h2 {
+#workflow-switch>h2 {
   font-size: 22px;
   padding-bottom: 1.8vh;
 }
@@ -212,28 +179,26 @@ export default defineComponent({
   padding: 2vh 1vw;
 }
 
-#workflow-toggle > button {
-}
+#workflow-toggle>button {}
 
-#workflow-demo {
-}
+#workflow-demo {}
 
-#workflow-demo > picture.levitate {
+#workflow-demo>picture.levitate {
   transform: translateY(-10%);
 }
 
-#workflow-demo > picture.pulse {
+#workflow-demo>picture.pulse {
   animation: pulse 2s infinite;
 }
 
-#workflow-demo > picture {
+#workflow-demo>picture {
   position: relative;
   width: 300px;
   height: 300px;
   margin: 0 auto;
 }
 
-#workflow-demo > picture {
+#workflow-demo>picture>img {
   width: 100%;
 }
 
@@ -241,14 +206,13 @@ export default defineComponent({
   width: 120px;
   height: 20px;
   margin: 0 auto;
-  background: linear-gradient(
-    135deg,
-    rgba(133, 103, 99, 1) 0% 0%,
-    rgba(83, 62, 58, 1) 100% 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(133, 103, 99, 1) 0% 0%,
+      rgba(83, 62, 58, 1) 100% 100%);
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     transform: translateY(0);
@@ -270,7 +234,7 @@ export default defineComponent({
     width: 100%;
   }
 
-  #workflow-demo > picture {
+  #workflow-demo>picture {
     width: 60%;
     height: auto;
   }
@@ -280,7 +244,7 @@ export default defineComponent({
     height: 1.8vh;
   }
 
-  #workflow-switch > h2 {
+  #workflow-switch>h2 {
     text-align: center;
   }
 }
