@@ -17,6 +17,8 @@ Veřejný repozitář bakalářské práce Jiřího Žáka, studenta UHK. 2024.
 - [ ] [Prezentační stránka](https://b3.gs-empire.com/)
 - [ ] [Sociální Síť](https://b4.gs-empire.com/)
 
+* Pokud je v rámci aplikace možné, či vyžadované se autentizovat. Pak je možné využít testovací přístupové údaje ve formě uživatelské jméno (root) a heslo (root123).
+
 ## Použití základních SPA
 
 Pro správnou funkcionalitu Vue.js aplikací v tomto repozitáři je třeba:
