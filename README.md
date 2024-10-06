@@ -1,6 +1,6 @@
 # bachelor-thesis
 
-Veřejný repozitář bakalářské práce Jiřího Žáka, studenta UHK. 2024.
+Veřejný repozitář [bakalářské práce](https://theses.cz/id/gobwx2/) Jiřího Žáka, studenta UHK. 2024. 
 
 ## Obsah repozitáře
 
